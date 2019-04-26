@@ -1,4 +1,3 @@
-  
 CC = gcc
 CFLAGS = -Wall
 LDFLAGS = -lSDL -lGLU -lGL -lm -lSDL_image -lglut
@@ -25,3 +24,4 @@ $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 
 clean:
 	rm $(OBJ_FILES) $(BIN_PATH)/$(APP_BIN)
+

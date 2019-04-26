@@ -1,6 +1,6 @@
 #include "map.h"
 
-/* ------- CRÉATION CARTE ------- */
+/* ------- CRÉATION CARTE + VERIFICATION ------- */
 
 int createMap(FILE* fichierITD, Map* map){
 
@@ -26,6 +26,14 @@ int createMap(FILE* fichierITD, Map* map){
 	}
 	else {
 		(*map).map = filename;
+	}
+
+	//vérification version
+	fscanf(fichierITD,"%d\n",version);
+	if (version !=1)
+	{
+		fprintf(stderr,  "Erreur ITD : version\n");
+		return 0;
 	}
 
 	//vérification de mots clés: initialisation

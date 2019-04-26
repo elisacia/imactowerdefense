@@ -4,13 +4,14 @@
 
 int createMap(FILE* fichierITD, Map* map){
 
+	int x,y;
 	//vérification du code ITD
 	char codeITD[5];
 	fgets(codeITD,5,fichierITD);
 
 	if (strcmp(codeITD,"@ITD")!= 0)
 	{
-		fprintf(stderr, "Erreur ITD: Code du fichier ITD invalide\n", );
+		fprintf(stderr, "Erreur ITD: Code du fichier ITD invalide\n" );
 		return 0;
 	}
 
@@ -20,7 +21,7 @@ int createMap(FILE* fichierITD, Map* map){
 	char* extension = strchr(filename,'.');
 	if (strcmp(extension,".ppm\n") !=0)
 	{
-		fprintf(stderr, "Erreur ITD: Le fichier n'est pas au format .ppm \n", );
+		fprintf(stderr, "Erreur ITD: Le fichier n'est pas au format .ppm \n" );
 		return 0;
 	}
 	else {
@@ -37,7 +38,7 @@ int createMap(FILE* fichierITD, Map* map){
 	fgets(keyword,7, fichierITD);
 	if (strcmp(keyword,"carte") !=0)
 	{
-		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"carte\" \n", );
+		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"carte\" \n" );
 		return 0;
 	}
 
@@ -48,7 +49,7 @@ int createMap(FILE* fichierITD, Map* map){
 		fscanf(fichierITD, "%d %d %d\n", &R, &G, &B);
 		if (R < 0 || R > 255 || G < 0 || G > 255 || B < 0 || B > 255)
 		{
-			fprintf(stderr, "Erreur ITD: Couleur clé du chemin \n", );
+			fprintf(stderr, "Erreur ITD: Couleur clé du chemin \n" );
 			return 0;
 		}
 		else {
@@ -56,7 +57,7 @@ int createMap(FILE* fichierITD, Map* map){
 		}
 	}
 	else {
-		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"chemin\" \n", );
+		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"chemin\" \n" );
 		return 0;
 	}
 
@@ -68,7 +69,7 @@ int createMap(FILE* fichierITD, Map* map){
 		fscanf(fichierITD, "%d %d %d\n", &R, &G, &B);
 		if (R < 0 || R > 255 || G < 0 || G > 255 || B < 0 || B > 255)
 		{
-			fprintf(stderr, "Erreur ITD: Couleur clé des noeuds \n", );
+			fprintf(stderr, "Erreur ITD: Couleur clé des noeuds \n" );
 			return 0;
 		}
 		else {
@@ -76,7 +77,7 @@ int createMap(FILE* fichierITD, Map* map){
 		}
 	}
 	else {
-		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"noeud\" \n", );
+		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"noeud\" \n" );
 		return 0;
 	}
 
@@ -88,7 +89,7 @@ int createMap(FILE* fichierITD, Map* map){
 		fscanf(fichierITD, "%d %d %d\n", &R, &G, &B);
 		if (R < 0 || R > 255 || G < 0 || G > 255 || B < 0 || B > 255)
 		{
-			fprintf(stderr, "Erreur ITD: Couleur clé des zones constructibles \n", );
+			fprintf(stderr, "Erreur ITD: Couleur clé des zones constructibles \n" );
 			return 0;
 		}
 		else {
@@ -96,7 +97,7 @@ int createMap(FILE* fichierITD, Map* map){
 		}
 	}
 	else {
-		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"construct\" \n", );
+		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"construct\" \n" );
 		return 0;
 	}
 
@@ -108,7 +109,7 @@ int createMap(FILE* fichierITD, Map* map){
 		fscanf(fichierITD, "%d %d %d\n", &R, &G, &B);
 		if (R < 0 || R > 255 || G < 0 || G > 255 || B < 0 || B > 255)
 		{
-			fprintf(stderr, "Erreur ITD: Couleur clé de la zone d'entrée \n", );
+			fprintf(stderr, "Erreur ITD: Couleur clé de la zone d'entrée \n" );
 			return 0;
 		}
 		else {
@@ -116,7 +117,7 @@ int createMap(FILE* fichierITD, Map* map){
 		}
 	}
 	else {
-		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"in\" \n", );
+		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"in\" \n" );
 		return 0;
 	}
 
@@ -128,7 +129,7 @@ int createMap(FILE* fichierITD, Map* map){
 		fscanf(fichierITD, "%d %d %d\n", &R, &G, &B);
 		if (R < 0 || R > 255 || G < 0 || G > 255 || B < 0 || B > 255)
 		{
-			fprintf(stderr, "Erreur ITD: Couleur clé de la zone de sortie \n", );
+			fprintf(stderr, "Erreur ITD: Couleur clé de la zone de sortie \n" );
 			return 0;
 		}
 		else {
@@ -136,7 +137,7 @@ int createMap(FILE* fichierITD, Map* map){
 		}
 	}
 	else {
-		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"out\" \n", );
+		fprintf(stderr, "Erreur ITD: Mot-clé différent de \"out\" \n" );
 		return 0;
 	}
 
@@ -201,7 +202,6 @@ int createMap(FILE* fichierITD, Map* map){
 
 
 	//liste des noeuds 
-	int x,y;
 	fseek(fichierITD, position, SEEK_SET);
 	fscanf(fichierITD, "%d %d\n", &x, &y);
 	Node* current = createNode(x, y);

@@ -28,7 +28,7 @@ typedef struct monster {
 	int profit;
 	//image associated to the monster
 	Image* imageMonster;
-	
+
 }Monster;
 
 

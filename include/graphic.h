@@ -12,6 +12,8 @@
 
 /* ------- FONCTIONS ------- */
 
-SDL_SURFACE* loadImage(char* filename);
+SDL_SURFACE* loadImage(char* filename); //image loading
+GLuint loadTexture (char* filename); //texture loading
+void drawPicture(GLuint textureId, int xScale, int yScale); //drawing a square with texture
 
 #endif

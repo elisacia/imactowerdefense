@@ -1,7 +1,16 @@
 #ifndef ITD_MONSTER_H__
 #define ITD_MONSTER_H__
 
+#include <SDL/SDL.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+
 #include "image.h"
+#include "struct.h"
+#include "tower.h"
 
 /* STRUCTURE OF MONSTERS */
 

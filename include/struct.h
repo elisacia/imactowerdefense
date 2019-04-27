@@ -1,5 +1,9 @@
-#ifndef ITD_OUTILS__
-#define ITD_OUTILS__
+#ifndef ITD_STRUCT__
+#define ITD_STRUCT__
+
+#include <SDL/SDL.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include <stdlib.h>
 #include <stdio.h>

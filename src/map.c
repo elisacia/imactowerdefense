@@ -4,7 +4,7 @@
 
 int createMap(FILE* fichierITD, Map* map){
 
-	int x,y;
+	int x,y,id,typeofNode;
 	//vérification du code ITD
 	char codeITD[5];
 	fgets(codeITD,5,fichierITD);
@@ -178,6 +178,12 @@ fprintf(stderr, "%s\n",filename );
 	int nbNoeud;
 	fscanf(fichierITD, "%d\n", &nbNoeud);
 
+	if(nbNoeud < 2) 
+	{
+		printf("Erreur ITD: Trouvé %d noeuds : au moins %d noeuds nécessaires.\n", nbNoeud, 2);
+		return false;
+	}
+
 	//récupération du nombre de coordonnées de noeuds (on compte le nombre de ligne qu'il reste)
 	unsigned int nbLines = 1;
 	int c;
@@ -200,13 +206,11 @@ fprintf(stderr, "%s\n",filename );
 	//récupération position du curseur
 	long position;
 	position = ftell(fichierITD);
-
-
 	fseek(fichierITD, position, SEEK_SET); //place le cuseur au premier noeud
 
-	//suppression du '\n' dans le nom de l'image
-	int length = strlen(filename);
-	filename[length-1] = '\0';
+	// //suppression du '\n' dans le nom de l'image
+	// int length = strlen(filename);
+	// filename[length-1] = '\0';
 
 	//chargement carte 
 	char file[30] = "img/";
@@ -218,13 +222,13 @@ fprintf(stderr, "%s\n",filename );
 		return 0;
 	}
 
-	//vérification
+	//vérification si les coordonnés sont bien dans la carte
 	int i=0;
 	while(i<nbLines) {
-		fscanf(fichierITD, "%d %d\n", &x, &y);
+		fscanf(fichierITD, "%d %d %d %d\n",&id, &typeofNode &x, &y);
 		if (x > carte->w || y > carte->h || x<0 || y<0)
 		{
-			fprintf(stderr, "Erreur ITD: erreur de coordonnées %s\n",file );
+			fprintf(stderr, "Erreur ITD: erreur de coordonnées sur le carte %s\n, des coordonnées sont hors de la taille de la carte",file );
 			return 0;
 		}
 		i++;
@@ -235,13 +239,13 @@ fprintf(stderr, "%s\n",filename );
 
 	//liste des noeuds 
 	fseek(fichierITD, position, SEEK_SET);
-	fscanf(fichierITD, "%d %d\n", &x, &y);
-	Node* current = createNode(x, y);
+	fscanf(fichierITD, "%d %d %d %d\n",&id, &typeofNode, &x, &y);
+	Node* current = createNode(x, y,typeofNode,id);
 	Node* tmp = current;
 	for (int i = 0; i < nbLines; ++i)
 	 {
-	 	fscanf(fichierITD, "%d %d\n", &x, &y);
-	 	Node* node = createNode(x,y);
+	 	fscanf(fichierITD, "%d %d %d %d\n",&id, &typeofNode, &x, &y);
+	 	Node* node = createNode(x,y,typeofNode,id);
 	 	(*current).next = node;
 		current=(*current).next;
 	 } 

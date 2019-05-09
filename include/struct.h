@@ -30,6 +30,8 @@ typedef struct str_node
 	Color color;
 	float x;
 	float y;
+	int id;
+	int type;
 	struct str_node* next;				
 }Node;
 
@@ -54,6 +56,6 @@ typedef struct jeu {
 /* ------- FONCTIONS ------- */
 
 Color ColorRGB(float r, float g, float b);
-Node* createNode(int x, int y);
+Node* createNode(int x, int y, int type, int id);
 
 #endif

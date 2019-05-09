@@ -15,6 +15,8 @@ int createMap(FILE* fichierITD, Map* map){
 		return 0;
 	}
 
+		//vérification commentaire
+
 	//vérification format ppm
 	char filename[20];
 	fgets(filename,20, fichierITD);

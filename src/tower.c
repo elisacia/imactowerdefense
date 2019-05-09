@@ -169,7 +169,7 @@ Tower* overTour(Tower* t, int x, int y) {
 	}
 }
 
-/* ------- DISPKAY TOWER INFOS ------- */
+/* ------- DISPLAY TOWER INFOS ------- */
 void drawTowerInformations(Tower* currentTower){
 	GLuint towerInfo;
 	switch(currentTower->type){

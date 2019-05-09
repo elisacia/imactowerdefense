@@ -7,17 +7,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-#include "image.h"
 #include "struct.h"
 #include "tower.h"
+#include "graphic.h"
 
 /* STRUCTURE OF MONSTERS */
+typedef enum{
+	CAT_1, CAT_2, CAT_3, CAT_4
+}MonsterType;
+
 
 typedef struct monster {
 
 	//type of the monster 
-	char* type;
+	MonsterType type;
 	//position of the monster
 	float x;
 	float y;
@@ -36,7 +39,7 @@ typedef struct monster {
 	//the profit done when the monster is killed (money)
 	int profit;
 	//image associated to the monster
-	Image* imageMonster;
+	char* imageMonster;
 
 }Monster;
 
@@ -44,9 +47,6 @@ typedef struct monster {
 
 /* STRUCTURE OF THE LIST OF MONSTERS */
 
-typedef enum{
-	CAT_1, CAT_2, DOG_ROBOT_1, DOG_ROBOT_2
-}MonsterType;
 
 typedef struct listMonster {
 	Monster* monsterr;
@@ -63,9 +63,9 @@ typedef struct wave {
 /* FUNCTIONS */
 
 /* CREATE A NEW MONSTER */
-Monster* createMonster(MonsterType type, Node* next, float x, float y)
+Monster* createMonster(MonsterType type, Node* next, float x, float y);
 /* CHOOSE THE TYPE OF MONSTER */
-MonsterType chooseMonster(Wave wave)
+MonsterType chooseMonster(Wave wave);
 /* CREATE A NEW LIST */
 listMonster* createList();
 

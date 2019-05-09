@@ -5,7 +5,7 @@ Tower* createTower(int x, int y, TowerType type){
 
 	Tower* tower = (Tower*)malloc(sizeof(Tower));
 
-	if(nouvelleTour == NULL) {
+	if(tower == NULL) {
 		fprintf(stderr, "MEMORY ERROR\n");
 		exit(1);
 	}
@@ -13,7 +13,7 @@ Tower* createTower(int x, int y, TowerType type){
 	tower->type = type;
 	tower->x = x;
 	tower->y = y;
-	tower->next = next;
+	tower->next = NULL;
 
 	switch(type){
 
@@ -49,8 +49,7 @@ Tower* createTower(int x, int y, TowerType type){
 			break;
 		}
 
-	monstre->next = NULL;
-	return monstre;
+	return tower;
 }
 
 /* ------- TOWER CONSTRUCTION ------- */
@@ -126,7 +125,7 @@ void constructTower(Tower* tower){
 /* ------- CHECK TOWER POSITION ------- */
 
 //vérifie si déja une tour placée
-int checkTowerPosition(Tower* t, int x, int y, int R, int G, int B){
+int checkTowerPosition(Tower* tower, int x, int y, int R, int G, int B){
 	Tower* currentTower = tower;
 	char color[3];
 
@@ -141,8 +140,8 @@ int checkTowerPosition(Tower* t, int x, int y, int R, int G, int B){
 		}
 	}
 
-	int postionY = 600-y;
-	glReadPixels(x,positionY,1,1,GL_RGB, GL_UNISGNED_BYTE,color);
+	int positionY = 600-y;
+	glReadPixels(x,positionY,1,1,GL_RGB, GL_UNSIGNED_BYTE,color);
 	if (color[0] != R && color[1] != G && color[2] != B) {}
 	{
 		fprintf(stderr, "Impossible de placer la tour hors du terrain\n");
@@ -195,7 +194,6 @@ void drawTowerInformations(Tower* currentTower){
 	drawPicture(towerInfo,200,150); //taille info bulle image
 	glPopMatrix();
 
-	current= current->next;
 }
 
 /* ------- DELETE TOWER  ------- */
@@ -238,9 +236,9 @@ Tower* deleteTower(Tower* firstElement, Tower* t){
 			}
 			free(delTower);
 		}
-		firstElement = firstElement->next
+		firstElement = firstElement->next;
 	}
-	return tour;
+	return tower;
 }
 
 /* ------- DETECT MONSTER AROUND TOWER POSITION ------- */

@@ -10,6 +10,7 @@
 #include <math.h>
 
 #include "struct.h"
+#include "graphic.h"
 
 
 
@@ -17,7 +18,7 @@
 
 typedef enum{
 	RED, GREEN, YELLOW, BLUE
-}TowerType
+}TowerType;
 
 typedef struct str_tower
 {

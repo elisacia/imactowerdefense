@@ -42,6 +42,14 @@ typedef struct str_list
 	Node* next;			
 }List;
 
+typedef struct jeu {
+	int start;
+	int win;
+	int lose;
+	int pause;
+	int help;
+	int rule;
+}Jeu;
 
 /* ------- FONCTIONS ------- */
 

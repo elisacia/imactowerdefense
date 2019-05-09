@@ -5,11 +5,11 @@
 
 typedef struct jeu {
 	int start;
-	int gagne;
-	int perdu;
+	int win;
+	int lose;
 	int pause;
 	int help;
-	int regle;
+	int rule;
 }Jeu;
 
 #endif

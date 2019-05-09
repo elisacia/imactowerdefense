@@ -27,7 +27,7 @@ typedef struct map
 /* ------- FONCTIONS ------- */
 
 Map loadMap(char* fileNameMapITD);
-int createMap(File* fichierITD, Map* map);
+int createMap(FILE* fichierITD, Map* map);
 void drawPath(Node* n);
 
 #endif

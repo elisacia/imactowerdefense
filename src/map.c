@@ -29,6 +29,7 @@ int createMap(FILE* fichierITD, Map* map){
 	}
 
 	//vérification version
+	int version;
 	fscanf(fichierITD,"%d\n",version);
 	if (version !=1)
 	{
@@ -187,7 +188,7 @@ int createMap(FILE* fichierITD, Map* map){
 	//chargement carte 
 	char file[30] = "images/";
 	strcat(file,filename);
-	SDL_SURFACE* carte = IMG_Load(file);
+	SDL_Surface* carte = IMG_Load(file);
 	if (carte == NULL)
 	{
 		fprintf(stderr, "Erreur ITD: impossible de charger la carte %s\n",file );

@@ -2,8 +2,8 @@
 
 /* ------- CHARGEMENT IMAGE ------- */
 
-SDL_SURFACE* loadImage(char* filename){
-	SDL_SURFACE* image = IMG_LOAD(filename);
+SDL_Surface* loadImage(char* filename){
+	SDL_Surface* image = IMG_Load(filename);
 	if (image == NULL)
 	{
 		fprintf(stderr, "Erreur chargement image %s\n", filename );
@@ -34,7 +34,7 @@ GLuint loadTexture (char* filename){
 
 /* ------- DESSIN CARRE TEXTURE ------- */
 
-void drawPicture(GLuint textureID, int xScale, int yScale){
+void drawPicture(GLuint textureId, int xScale, int yScale){
 	glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

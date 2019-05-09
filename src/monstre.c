@@ -103,3 +103,39 @@ listMonster* createList() {
 }
 
 
+int drawMonster(Monster* monster, Jeu* jeu){
+	SDL_Surface* Monster= loadImage(monster->imageMonster);
+	GLuint monsterTex= loadTexture(monster->imageMonster);
+	if(monster->node_next != NULL)
+	{
+		if(monster->node_next->y == monster->y)
+		{
+			if(monster->node_next->x > monster->x)
+			{
+				monster->x +=1 * monster->speed;
+			}
+			else{
+				monster->x -=1 * monster->speed;
+			}
+		}
+		if(monster->node_next->x == monster->x && monster->node_next->y == monster->y)
+		{
+			monster->node_next=monster->node_next->next;
+		}
+		else{
+			if(monster->node_next->y > monster->y)
+			{
+				monster->y +=1 * monster->speed;
+			}
+			else{
+				monster->y -=1 * monster->speed;
+			}
+		}
+	}
+	if(monster->node_next == NULL)
+	{
+		printf("PERDU :(\n");
+		jeu->lose=1;
+	}
+
+}

@@ -10,7 +10,7 @@ Color ColorRGB(float r, float g, float b){
 	return color;
 }
 
-Node* createNode(int x, int y, int type, int id) {
+Node* createNode(int x, int y) {
 	Node* node = (Node*)malloc(sizeof(Node));
 	if (node == NULL)
 	{
@@ -19,8 +19,6 @@ Node* createNode(int x, int y, int type, int id) {
 	}
 	(*node).x = x;
 	(*node).y = y;
-	(*node).type = type;
-	(*node).id = id;
 	(*node).next = NULL;
 
 	return node;

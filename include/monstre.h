@@ -34,8 +34,6 @@ typedef struct monster {
 	int speed;
 	//resistance of the monster (it increases)
 	int resistance;
-	//points earned by the player when he kills a monster 
-	int pointPlayer;
 	//the profit done when the monster is killed (money)
 	int profit;
 	//image associated to the monster
@@ -54,7 +52,7 @@ typedef struct listMonster {
 }listMonster;
 
 typedef struct wave {
-	listMonster list;
+	listMonster list[20];
 	int nbLists;
 }Wave;
 

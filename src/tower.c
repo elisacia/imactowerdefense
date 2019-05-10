@@ -18,31 +18,31 @@ Tower* createTower(int x, int y, TowerType type){
 	switch(type){
 
 		case RED :
-			tower->puissance = 12;
-			tower->cadence = 100; //every second
-			tower->cout = 1000;
-			tower->portee= 200;
+			tower->puissance = 100;
+			tower->cadence = 10; //every second
+			tower->cout = 500;
+			tower->portee= 300;
 			break;
 
 		case GREEN:
-			tower->puissance = 4;
-			tower->cadence = 20; //every 200ms
-			tower->cout = 500;
-			tower->portee= 100;
+			tower->puissance = 50;
+			tower->cadence = 50; //every 200ms
+			tower->cout = 300;
+			tower->portee= 200;
 			break;
 
 		case YELLOW:
-			tower->puissance = 8;
-			tower->cadence = 60; //every 600ms
-			tower->cout = 1000;
-			tower->portee= 250;
+			tower->puissance = 30;
+			tower->cadence = 30; //every 600ms
+			tower->cout = 250;
+			tower->portee= 100;
 			break;
 
 		case BLUE:
-			tower->puissance = 2;
-			tower->cadence = 40; //every 400ms
-			tower->cout = 500;
-			tower->portee= 150;
+			tower->puissance = 30;
+			tower->cadence = 30; //every 400ms
+			tower->cout = 400;
+			tower->portee= 40;
 			break;
 
 		default:
@@ -62,25 +62,25 @@ TowerType selectTower( xClick,  yClick){
 // !!!!! A METTRE A JOUR EN FONCTION PLACEMENT BOUTON !!!!//
 	
 	//Red tower selection
-	if (xClick > 5 && xClick < 165 && yClick >550 && yClick<590)
+	if (xClick > 610 && xClick < 780 && yClick >80 && yClick<130)
 	{
 		T=RED;
 	}
 
 	//Green tower selection
-	if (xClick > 175 && xClick < 330 && yClick > 550 && yClick < 590)
+	if (xClick > 610 && xClick < 780 && yClick > 250 && yClick < 305)
 	{
 		T=GREEN;
 	}
 
 	//Yellow tower selection
-	if (xClick > 345 && xClick < 505 && yClick > 550 && yClick < 590)
+	if (xClick > 610 && xClick < 780 && yClick > 135 && yClick < 190)
 	{
 		T=YELLOW;
 	}
 
 	//Blue tower selection
-	if (xClick > 515 && xClick < 680 && yClick > 550 && yClick < 590)
+	if (xClick > 610 && xClick < 780 && yClick > 195 && yClick < 250)
 	{
 		T=BLUE;
 	}

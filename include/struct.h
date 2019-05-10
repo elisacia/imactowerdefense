@@ -56,6 +56,6 @@ typedef struct jeu {
 /* ------- FONCTIONS ------- */
 
 Color ColorRGB(float r, float g, float b);
-Node* createNode(int x, int y, int type, int id);
+Node* createNode(int x, int y);
 
 #endif

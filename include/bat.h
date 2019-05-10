@@ -64,7 +64,7 @@ void drawBatInformations(Bat* currentBat);
 //DELETE TOWER
 Bat* deleteBat(Bat* firstElement, Bat* t);
 
-//DETECTION OF TOWER AROUND THE BAT
+//DETECTION OF TOWER AROUND T HE BAT
 // BatType detectTower(Bat* t, int x, int y);
 
 

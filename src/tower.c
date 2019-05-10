@@ -59,7 +59,6 @@ Tower* createTower(int x, int y, TowerType type){
 TowerType selectTower( xClick,  yClick){
 	TowerType T;
 
-// !!!!! A METTRE A JOUR EN FONCTION PLACEMENT BOUTON !!!!//
 	
 	//Red tower selection
 	if (xClick > 610 && xClick < 780 && yClick >80 && yClick<130)

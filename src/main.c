@@ -224,11 +224,7 @@ int main(int argc, char** argv)
     /* Initialization of money */
     int money = 3000;
     char* yen= "YEN";
-
-    /* Initialization of wave*/
-    char* totalWave=" vagues";
-
-    /* Show the budget of the player */
+    //Show the budget of the player 
     printf("%d %s\n",money, yen);
 
     /* Initializing the SDL */
@@ -261,24 +257,39 @@ int main(int argc, char** argv)
 
 
     /* Loading the ITD map */
-    /*char* mapImage= "img/carte1.ppm";
+    char* nameMap[50]= "img/carte1.ppm";
     map= loadMap("data/carte1.itd");
-    SDL_Surface* background= loadImage(mapImage);
+    SDL_Surface* background= loadImage(nameMap);
     GLuint backgroundTex;
-    backgroundTex= loadTexture(mapImage);
+    backgroundTex= loadTexture(nameMap);
     
     /* Loading the menu */
-    //GLuint menu = loadTexture("img/menu.png");
+    GLuint menu = loadTexture("img/menu.png");
 
     /* Take back the coordinated of the node */
-    /*Node* node;
+    Node* node;
     node=(Node*)malloc(sizeof(Node));
     node=map.listNode;
     int nodeX= node->x;
     int nodeY= node->y;
 
     /* Creation of a monster */
-    //Monster* monstre= createMonster(typeMonster, node->next, nodeX, nodeY);
+    Monster* monster= createMonster(typeMonster, node->next, nodeX, nodeY);
+
+    /* Creation of a list of monster */
+    listMonster listM;
+    listM.monsterr= monster;
+    listM.nbMonster= 1;
+   
+    /* Creation of the wave of monsters */
+    Wave wave;
+    wave.nbLists=1;
+    //Creation of the table of the monster's lists 
+    wave.list[wave.nbLists -1]= listM;
+    char* totalWave=" vagues";
+    printf("%d %s %s\n", wave.nbLists, totalWave);
+
+
   
     /* Main loop */
     int loop = 1;
@@ -287,10 +298,20 @@ int main(int argc, char** argv)
         /* Time recovery at the beginning of the loop */
         Uint32 startTime = SDL_GetTicks();
         
-        /* Place the drawing code here */
+        /* Drawing code */
         glClear(GL_COLOR_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
+
+          
+
+
+
+
+
+
+
+
         
         /* Exchange of the front and the back buffer: update of the window */
         SDL_GL_SwapBuffers();

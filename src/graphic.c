@@ -58,3 +58,19 @@ void drawPicture(GLuint textureId, int xScale, int yScale){
 	glBindTexture(GL_TEXTURE_2D,0);
 
 }
+
+/* ------- DESSIN CARRE  ------- */
+
+
+void drawSquare(int x, int y){
+    glBegin(GL_QUADS);
+      glTexCoord2d(0, 0); 
+      glVertex2f(0, y);
+      glTexCoord2d(0, 1); 
+      glVertex2f(0, 0);
+      glTexCoord2d(1, 1); 
+      glVertex2f( x, 0);
+      glTexCoord2d(1, 0); 
+      glVertex2f( x, y);
+    glEnd();
+}

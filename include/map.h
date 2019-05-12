@@ -17,7 +17,7 @@ typedef struct map
 	char* map;				// Nom du fichier image.ppm représentant la carte
 	Node* listNode;			// Liste de noeuds
 	unsigned int nbNodes;		// Nombre noeuds
-	Color colorPath;			// Couleur chemein
+	Color colorPath;			// Couleur chemin
 	Color colorNode;			// Couleur noeuds
 	Color colorConstruct;		// Couleur zones constructibles
 	Color colorIn;				// Couleur zone entrée

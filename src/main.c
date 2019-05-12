@@ -1,118 +1,3 @@
-
-
-
-  /* Texture background */
-  //GLuint backgroundTex;
-
-
-  /* Show the budget of the player */
-  //printf("%d %s\n",money, yen);
-
-
-  /* Loading access page */
-  //GLuint accessTex = loadTexture("image/access.ppm");
-  /*Loading page winner */
-  //GLuint winnerTex = loadTexture("image/winner.png");
-  /*Loading page loser */
-  //GLuint loserTex = loadTexture("image/loser.png");
-  /*Loading rules page */
-  //GLuint rulesTex = loadTexture("image/rules.png");
-  /*Loading help page */
-  //GLuint helpTex = loadTexture("image/help.png");
-  /*Loading pause page */
-  //GLuint pauseTex = loadTexture("image/pause.png");
-
-
-  /* Loading the ITD map */
-  /*char* mapImage= "images/carte1.ppm";
-  map= loadMap("data/carte1.itd");
-  SDL_Surface* background= loadImage(mapImage);
-  int backgroundTex= loadTexture(mapImage);
-  
-
-  /* creation of the loop*/
-  /*int loop=1;
-  while(loop)
-  {
-    /* Time recovery at the beginning of the loop */
-    //Uint32 startTime = SDL_GetTicks();
-
-    /* Coding of the drawing */
-    /*glClear(GL_COLOR_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-
-
-
-    /* Exchange of the front and the back buffer: update of the window */
-    //SDL_GL_SwapBuffers();
-
-
-    /* Loop about events */
-    /*SDL_Event e;
-    while(SDL_PollEvent(&e)) 
-    {
-      /* The user close the window: */
-      /*if(e.type == SDL_QUIT) 
-      {
-        loop = 0;
-        break;
-      }
-
-      /* The user close the window: */
-        /*if(e.type == SDL_QUIT) 
-        {
-          loop = 0;
-          break;
-        }
-        if( e.type == SDL_KEYDOWN 
-          && (e.key.keysym.sym == SDLK_q || e.key.keysym.sym == SDLK_ESCAPE))
-        {
-          loop = 0; 
-          break;
-        }
-            
-      /* Quelques exemples de traitement d'evenements : */
-      /*switch(e.type) 
-      {
-        /* Redimensionnement fenetre */
-        /*case SDL_VIDEORESIZE:
-          reshape(&surface, e.resize.w, e.resize.h);
-          break; 
-
-        /* Clic souris */
-        /*case SDL_MOUSEBUTTONUP:
-          printf("clic en (%d, %d)\n", e.button.x, e.button.y);
-          break;
-                
-        /* Touche clavier */
-        /*  case SDL_KEYDOWN:
-            printf("touche pressee (code = %d)\n", e.key.keysym.sym);
-            break;
-                    
-          default:
-            break;
-        }
-    }
-
-    /* Calculation of elapsed time */
-    //Uint32 elapsedTime= SDL_GetTicks()-startTime;
-    /* If too little time has passed, we pause the program */
-    /*if(elapsedTime < FRAMERATE_MILLISECONDS)
-    {
-      SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
-    }
-  }  
-
-  /* Release of resources associated with the SDL */
-  /*SDL_Quit();
-
-  return EXIT_SUCCESS;
-}
-*/
-
-
 #include <SDL/SDL_image.h>
 #include <math.h> 
 #include <GL/glut.h> 
@@ -145,41 +30,6 @@ static float aspectRatio;
 
 
 
-void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
-{ 
-    SDL_Surface* surface_temp = SDL_SetVideoMode(   
-        width, height, BIT_PER_PIXEL,
-        SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_RESIZABLE);
-    if(NULL == surface_temp) 
-    {
-        fprintf(
-            stderr, 
-            "Erreur lors du redimensionnement de la fenetre.\n");
-        exit(EXIT_FAILURE);
-    }
-    *surface = surface_temp;
-
-    aspectRatio = width / (float) height;
-
-    glViewport(0, 0, (*surface)->w, (*surface)->h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    if( aspectRatio > 1) 
-    {
-        gluOrtho2D(
-        -GL_VIEW_SIZE / 2. * aspectRatio, GL_VIEW_SIZE / 2. * aspectRatio, 
-        -GL_VIEW_SIZE / 2., GL_VIEW_SIZE / 2.);
-    }
-    else
-    {
-        gluOrtho2D(
-        -GL_VIEW_SIZE / 2., GL_VIEW_SIZE / 2.,
-        -GL_VIEW_SIZE / 2. / aspectRatio, GL_VIEW_SIZE / 2. / aspectRatio);
-    }
-}
-
-
-
 int main(int argc, char** argv) 
 {
     /* Initialization of the game */
@@ -199,8 +49,9 @@ int main(int argc, char** argv)
     int xOver=0, yOver =0, buttonOver = 0;
     int terrain =0;
     int taille =0;
-    int times=1;
     */
+    int times=1;
+    
 
     /* Creation of monsters */
     MonsterType typeMonster = CAT_1;
@@ -303,7 +154,97 @@ int main(int argc, char** argv)
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-          
+        /* when the player clicks on "play" */
+        if (jeu->start && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0 && jeu->rule == 0)
+        {
+          //draw a rectangle with the texture of the cart
+          drawPicture(backgroundTex, background->w, background->h);
+          //Draw the path with .itd's colors and the coordinates of nodes
+          glColor3ub(map.colorPath.r, map.colorPath.g, map.colorPath.b);
+          drawPath(node);
+
+          // Color of the building zones
+          glColor3ub(map.couleurConstruct.r, map.couleurConstruct.g, map.couleurConstruct.b);
+          glPushMatrix();
+          glTranslatef(10,220,0);
+          drawSquare(160,200);
+          glPopMatrix();
+
+          glPushMatrix();
+          glTranslatef(230,330,0);
+          drawSquare(200,80);
+          glPopMatrix();
+
+          glPushMatrix();
+          glTranslatef(230,410,0);
+          drawSquare(70,150);
+          glPopMatrix();
+
+          glPushMatrix();
+          glTranslatef(200,90,0);
+          drawSquare(160,170);
+          glPopMatrix();
+
+          glPushMatrix();
+          glTranslatef(510,150,0);
+          drawSquare(160,200);
+          glPopMatrix();
+
+          glColor3ub(255,255,255);
+
+          /* Displays infos about the selected tower type */     
+          if(info == NULL)
+          { 
+            switch(towerType)
+            {
+              case RED:
+                loadTexture("image/tower_red_info.png");
+                break;
+              case GREEN :
+                loadTexture("image/tower_green_info.png");
+                break;  
+              case YELLOW :
+                loadTexture("image/tower_yellow_info.png");
+                break;
+              case BLUE :  
+                loadTexture("image/tower_blue_info.png");
+                break;
+              default:
+                break;
+            }
+          }
+
+        }
+
+        /* Choose the type of monster in function of the number of waves */
+        typeMonster = chooseMonster(wave);
+        /* Creation of a new monster with default parameters from the beginning */
+        Monster* newMonster = createMonster(typeMonster, node->next, nodeX, nodeY);
+
+        /* About monster list lists */
+        if( times%600 == 0  && wave.nbLists < 10 ) 
+        {
+          listeMonstre listMonst;
+          monster = newMonstre;
+          listeM.m = monster;
+          listM = listMonst;
+          listM.nbMonster = 1;
+          wave.nbLists+=1;
+          wave.list[wave.nbLists - 1]= listM;
+          /* convertion pour l'affichage du nombre de vague*/
+          sprintf(ch_vague, "%d", vague.nbListes); // Conversion de l'entier
+          sprintf(ChaineFinaleVague, "%s%s", ch_vague, totalVague);
+        }
+        /* Création liste de monstre times permet de faire une pause afin d'espacer les monstres*/
+        else if(times%60 == 0/*startTime - last_time > 2000*/ && lMonstre.nbMonstre<6)
+        {
+          //last_time = startTime;
+          monstre = ajoutMonstre(monstre, newMonstre);
+          vague.liste[vague.nbListes - 1].m = monstre;
+          lMonstre.nbMonstre +=1;
+          //printf("%d\n", startTime);
+        }
+
 
 
 

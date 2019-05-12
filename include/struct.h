@@ -57,5 +57,6 @@ typedef struct jeu {
 
 Color ColorRGB(float r, float g, float b);
 Node* createNode(int x, int y);
+void reshape(SDL_Surface** surface, unsigned int width, unsigned int height);
 
 #endif

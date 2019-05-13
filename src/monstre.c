@@ -1,6 +1,6 @@
 #include "monstre.h"
 
-/* CREATE A NEW MONSTER */
+/* CREATE  NEW MONSTER */
 Monster* createMonster(MonsterType type, Node* next, float x, float y){
 	if (next == NULL)
 	{
@@ -27,7 +27,6 @@ Monster* createMonster(MonsterType type, Node* next, float x, float y){
 			monster->resistance = 1;
 			monster->speed = 1;
 			monster->imageMonster = "images/cat_1.png";
-			monster->pointPlayer= 2;
 			monster->profit= 50;
 			break;
 
@@ -36,7 +35,6 @@ Monster* createMonster(MonsterType type, Node* next, float x, float y){
 			monster->resistance = 2;
 			monster->speed = 2;
 			monster->imageMonster = "images/cat_2.png";
-			monster->pointPlayer= 2;
 			monster->profit= 70;
 			break;
 
@@ -45,7 +43,6 @@ Monster* createMonster(MonsterType type, Node* next, float x, float y){
 			monster->resistance = 7;
 			monster->speed = 2;
 			monster->imageMonster = "images/cat_3.png";
-			monster->pointPlayer= 2;
 			monster->profit= 70;
 			break;
 
@@ -54,7 +51,6 @@ Monster* createMonster(MonsterType type, Node* next, float x, float y){
 			monster->resistance = 3;
 			monster->speed = 5;
 			monster->imageMonster = "images/cat_4.png";
-			monster->pointPlayer= 2;
 			monster->profit= 100;
 			break;
 
@@ -90,19 +86,21 @@ MonsterType chooseMonster(Wave wave){
 }
 
 /* CREATE A NEW LIST */
-listMonster* createList() {
-	listMonster* list = (listMonster*)malloc(sizeof(listMonster));
+int createList(Wave wave, Jeu* jeu) {
+	Monster* m;
 	
-	if(list == NULL) {
-		fprintf(stderr, "MEMORY ERROR \n");
-		exit(1);
+	for (int i = 0; i < wave.nbLists; ++i)
+	{
+		m = wave.list[i].m;
+		while(m!=NULL) {
+			m = m->next;
+		}
 	}
-	list->monsterr = NULL;
-	list->nbMonster = 0;
-	return list;
+
+return 1;
 }
 
-
+/* DRAW MONSTER */
 int drawMonster(Monster* monster, Jeu* jeu){
 	SDL_Surface* Monster= loadImage(monster->imageMonster);
 	GLuint monsterTex= loadTexture(monster->imageMonster);
@@ -118,10 +116,7 @@ int drawMonster(Monster* monster, Jeu* jeu){
 				monster->x -=1 * monster->speed;
 			}
 		}
-		if(monster->node_next->x == monster->x && monster->node_next->y == monster->y)
-		{
-			monster->node_next=monster->node_next->next;
-		}
+		
 		else{
 			if(monster->node_next->y > monster->y)
 			{
@@ -131,11 +126,83 @@ int drawMonster(Monster* monster, Jeu* jeu){
 				monster->y -=1 * monster->speed;
 			}
 		}
-	}
+		if(monster->node_next->x == monster->x && monster->node_next->y == monster->y)
+		{
+			monster->node_next=monster->node_next->next;
+		}
+	
 	if(monster->node_next == NULL)
 	{
 		printf("PERDU :(\n");
 		jeu->lose=1;
 	}
 
+
+
+
+return 1;
+
+}
+else return 0;
+}
+
+
+Monster* newMonster(Monster* listMonster, Monster* newMonster) {
+	if (listMonster == NULL)
+	{
+		fprintf(stderr, "listMonster is NULL" );
+		return NULL;
+	}
+
+	if (newMonster == NULL)
+	{
+		fprintf(stderr, "newMonster is NULL" );
+		exit(1);
+	}
+
+	newMonster->next = listMonster;
+
+	return newMonster;
+}
+
+Monster* delMonster(Monster* listMonster, Monster* monster){
+	if (listMonster == NULL){
+		fprintf(stderr, "listmonster is NULL" );
+		exit(1);
+	}
+
+	Monster* m = listMonster;
+	Monster* delMonster;
+
+	if (listMonster == monster)
+	{
+		delMonster = listMonster;
+		if (listMonster->next != NULL) 
+		{
+			listMonster = listMonster->next;
+			free(delMonster);
+			return listMonster;
+		}
+		else {
+			free(delMonster);
+			return NULL;
+		}
+	}
+
+	while(listMonster->next != NULL){
+		if(listMonster->next == monster) {
+			delMonster = listMonster->next;
+			if (delMonster->next != NULL)
+			{
+				listMonster->next = delMonster->next;
+			}
+			else {
+				listMonster->next = NULL;
+				break;
+			}
+			free(delMonster);
+		}
+		listMonster = listMonster->next;
+	}
+	return m;
 }

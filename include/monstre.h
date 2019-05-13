@@ -38,6 +38,8 @@ typedef struct monster {
 	int profit;
 	//image associated to the monster
 	char* imageMonster;
+	//image associated to the monster
+	struct monster* next;
 
 }Monster;
 
@@ -47,7 +49,7 @@ typedef struct monster {
 
 
 typedef struct listMonster {
-	Monster* monsterr;
+	Monster* m;
 	int nbMonster;
 }listMonster;
 
@@ -64,7 +66,12 @@ typedef struct wave {
 Monster* createMonster(MonsterType type, Node* next, float x, float y);
 /* CHOOSE THE TYPE OF MONSTER */
 MonsterType chooseMonster(Wave wave);
-/* CREATE A NEW LIST */
-listMonster* createList();
+/* CREATE A NEW  LIST */
+int createList(Wave wave, Jeu* jeu);
+/* ADD MONSTER TO LIST*/
+Monster* newMonster(Monster* listMonster, Monster* newMonster);
+/* DELETE MONSTER */
+Monster* delMonster(Monster* listMonster, Monster* monster);
+
 
 #endif

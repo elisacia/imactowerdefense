@@ -26,7 +26,7 @@ Monster* createMonster(MonsterType type, Node* next, float x, float y){
 			monster->lifePoint = 40;
 			monster->resistance = 1;
 			monster->speed = 1;
-			monster->imageMonster = "images/cat_1.png";
+			monster->imageMonster = "img/CAT_1.png";
 			monster->profit= 50;
 			break;
 
@@ -34,7 +34,7 @@ Monster* createMonster(MonsterType type, Node* next, float x, float y){
 			monster->lifePoint = 50;
 			monster->resistance = 2;
 			monster->speed = 2;
-			monster->imageMonster = "images/cat_2.png";
+			monster->imageMonster = "img/CAT_2.png";
 			monster->profit= 70;
 			break;
 
@@ -42,7 +42,7 @@ Monster* createMonster(MonsterType type, Node* next, float x, float y){
 			monster->lifePoint = 100;
 			monster->resistance = 7;
 			monster->speed = 2;
-			monster->imageMonster = "images/cat_3.png";
+			monster->imageMonster = "img/CAT_3.png";
 			monster->profit= 70;
 			break;
 
@@ -50,7 +50,7 @@ Monster* createMonster(MonsterType type, Node* next, float x, float y){
 			monster->lifePoint = 40;
 			monster->resistance = 3;
 			monster->speed = 5;
-			monster->imageMonster = "images/cat_4.png";
+			monster->imageMonster = "img/CAT_4.png";
 			monster->profit= 100;
 			break;
 
@@ -93,11 +93,16 @@ int createList(Wave wave, Jeu* jeu) {
 	{
 		m = wave.list[i].m;
 		while(m!=NULL) {
+			if (drawMonster(m,jeu)==0)
+			{
+				return 0;
+			}
 			m = m->next;
+			
 		}
 	}
-
 return 1;
+
 }
 
 /* DRAW MONSTER */

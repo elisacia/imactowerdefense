@@ -4,7 +4,7 @@
 
 int createMap(FILE* fichierITD, Map* map){
 
-	int x,y;
+	int x,y,next;
 	//vérification du code ITD
 	char codeITD[5];
 	fgets(codeITD,5,fichierITD);
@@ -224,105 +224,40 @@ fprintf(stderr, "%s\n",filename );
 	}
 
 	//vérification si les coordonnés sont bien dans la carte
-		char chaine[4];
 	int i=0;
 
-	if (nbLines<11)
-	{
 
 	while(i<nbLines) {
-		fscanf(fichierITD, "%*d %*d %d %d\n", &x, &y);
+		fscanf(fichierITD, "%*d %*d %d %d %d\n", &x, &y,&next);
 		fprintf(stderr, "%d %d\n",x,y );
+		fprintf(stderr, "%d\n",next );
 		if (x > carte->w || y > carte->h || x<0 || y<0)
 		{
 			fprintf(stderr, "Erreur ITD: erreur de coordonnées sur le carte %s\n, des coordonnées sont hors de la taille de la carte",file );
 			return 0;
 		}
-		fgets(chaine, 4, fichierITD); 
 		i++;
 	}
 
 	x=0;
 	y=0;
-	}
-
-	if (nbLines>=11)
-	{
-
-	while(i<10) {
-		fscanf(fichierITD, "%*d %*d %d %d\n", &x, &y);
-		fprintf(stderr, "%d %d\n",x,y );
-		if (x > carte->w || y > carte->h || x<0 || y<0)
-		{
-			fprintf(stderr, "Erreur ITD: erreur de coordonnées sur le carte %s\n, des coordonnées sont hors de la taille de la carte",file );
-			return 0;
-		}
-		fgets(chaine, 4, fichierITD); 
-		i++;
-	}
-	for (int i = 10; i < nbLines; ++i)
-	{
-		fscanf(fichierITD, "%*d %*d %*d %d %d\n", &x, &y);
-		fprintf(stderr, "%d %d\n",x,y );
-		if (x > carte->w || y > carte->h || x<0 || y<0)
-		{
-			fprintf(stderr, "Erreur ITD: erreur de coordonnées sur le carte %s\n, des coordonnées sont hors de la taille de la carte",file );
-			return 0;
-		}
-		fgets(chaine, 4, fichierITD); 
-	}
-
-	x=0;
-	y=0;
-	}
-
+	
 
 	//liste des noeuds 
 	fseek(fichierITD, position, SEEK_SET);
-	fscanf(fichierITD, "%*d %*d %d %d\n", &x, &y);
-	fgets(chaine, 4, fichierITD); 
-	Node* current = createNode(x, y);
+	fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
+	Node* current = createNode(x, y, next);
 	Node* tmp = current;
 	
-if (nbLines<11)
-	{
-	char chaine[4];
+
 	while(i<nbLines) {
-		fscanf(fichierITD, "%*d %*d %d %d\n", &x, &y);
-		Node* node = createNode(x,y);
+		fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
+		Node* node = createNode(x,y, next);
 	 	(*current).next = node;
 		current=(*current).next;
-		fgets(chaine, 4, fichierITD); 
 		i++;
 	}
 
-	x=0;
-	y=0;
-	}
-
-	if (nbLines>=11)
-	{
-	char chaine[4];
-	while(i<10) {
-		fscanf(fichierITD, "%*d %*d %d %d\n", &x, &y);
-		Node* node = createNode(x,y);
-	 	(*current).next = node;
-		current=(*current).next;
-		fgets(chaine, 4, fichierITD); 
-		i++;
-	}
-	for (int i = 10; i < nbLines; ++i)
-	{
-		fscanf(fichierITD, "%*d %*d %*d %d %d\n", &x, &y);
-		Node* node = createNode(x,y);
-	 	(*current).next = node;
-		current=(*current).next;
-		fgets(chaine, 4, fichierITD); 
-	}
-
-	x=0;
-	y=0;
-	}
 
 	 (*current).next = NULL;
 	 (*map).listNode = tmp;

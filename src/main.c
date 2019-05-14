@@ -141,10 +141,16 @@ int main(int argc, char** argv)
     }
     backgroundTex= loadTexture(nameMap);
 
+    //Initialisation Glut
+    char *myargv [1];
+    int myargc=1;
+    myargv [0]=strdup("Myappname");
+    glutInit(&myargc, myargv);
+
 
     /* Loading the menu */
     GLuint menu = loadTexture("img/menu.png");
-    printf("ok\n");
+    printf("ok pour le menu\n");
 
     /* Take back the coordinated of the node */
     Node* node;
@@ -166,7 +172,7 @@ int main(int argc, char** argv)
     wave.nbLists=1;
     //Creation of the table of the monster's lists 
     wave.list[wave.nbLists -1]= listM;
-    char* totalWave=" vagues";
+    char* totalWave=" / 10 vagues";
     printf("%d %s\n", wave.nbLists, totalWave);
 
 
@@ -186,67 +192,17 @@ int main(int argc, char** argv)
         /* when the player clicks on "play" */
         if (jeu->start ==0 && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0 && jeu->rule == 0)
         {
-
           //draw a rectangle with the texture of the cart
-          //glTranslatef(-400,-300,0);
           drawPicture(backgroundTex, background->w, background->h);
           //Draw the path with .itd's colors and the coordinates of nodes
-          glColor3ub(map.colorPath.r, map.colorPath.g, map.colorPath.b);
-          drawPath(node);
-
-          // Color of the building zones
-          /*glColor3ub(map.colorConstruct.r, map.colorConstruct.g, map.colorConstruct.b);
-          glPushMatrix();
-          glTranslatef(10,220,0);
-          drawSquare(160,200);
-          glPopMatrix();
-
-          glPushMatrix();
-          glTranslatef(230,330,0);
-          drawSquare(200,80);
-          glPopMatrix();
-
-          glPushMatrix();
-          glTranslatef(230,410,0);
-          drawSquare(70,150);
-          glPopMatrix();
-
-          glPushMatrix();
-          glTranslatef(200,90,0);
-          drawSquare(160,170);
-          glPopMatrix();
-
-          glPushMatrix();
-          glTranslatef(510,150,0);
-          drawSquare(160,200);
-          glPopMatrix();
-
-          glColor3ub(255,255,255);
-
-          /* Displays infos about the selected tower type */     
-          if(info == NULL)
-          { 
-            switch(typeTower)
-            {
-              case RED:
-                loadTexture("img/tower_red_info.png");
-                break;
-              case GREEN :
-                loadTexture("img/tower_green_info.png");
-                break;  
-              case YELLOW :
-                loadTexture("img/tower_yellow_info.png");
-                break;
-              case BLUE :  
-                loadTexture("img/tower_blue_info.png");
-                break;
-              default:
-                break;
-            }
-          }
+          //glColor3ub(map.colorPath.r, map.colorPath.g, map.colorPath.b);
+          //drawPath(node);
+          //draw a rectangle with the texture of the map
+          glTranslatef(600,0,0);
+          drawPicture(menu, 200, 600);
 
         }
-
+ 
         /* Choose the type of monster in function of the number of waves */
         typeMonster = chooseMonster(wave);
         /* Creation of a new monster with default parameters from the beginning */
@@ -264,6 +220,7 @@ int main(int argc, char** argv)
           wave.list[wave.nbLists - 1]= listM;
           printf("%d %s\n", wave.nbLists, totalWave);
         }
+
         /* To pause in order to space monsters*/
         else if(times%60 == 0 && listM.nbMonster<6)
         {
@@ -273,10 +230,127 @@ int main(int argc, char** argv)
         }
 
         /* Draw the wave of monsters */    
-        //createList(wave, jeu);
-        /* Display the wave number */
-        //affichageTexte(GLUT_BITMAP_TIMES_ROMAN_24, ChaineFinaleVague, 10,100);
+        createList(wave, jeu);
 
+        /* Display the wave number */
+        char stringWave[255];
+        char str_wave[10];
+        sprintf(str_wave, "%d", wave.nbLists); // Convert the integer
+        sprintf(stringWave, "%s%s", str_wave, totalWave);
+        displayText(GLUT_BITMAP_9_BY_15, stringWave, 300,30);
+        
+
+        /* Delete a tower */
+        if(towerSupp != NULL)
+        {
+          first = deleteTower(first, towerSupp);
+        }  
+
+
+        /******** ACTION TOWER / MONSTER *********/
+        /* Display the list of monsters in the table */
+        for(int i = 0; i < wave.nbLists; i++) 
+        {   
+          monsterSupp = wave.list[i].m; 
+          while(monsterSupp != NULL) 
+          {             
+              // If the tower detects a monster => return the type of the tower
+              actionTower = detectMonster(first, (*monsterSupp).x, (*monsterSupp).y);
+              if(actionTower!=-1){ 
+                if(monsterSupp->lifePoint > 0)
+                {
+                  switch(actionTower)
+                  {
+                    case RED:
+                      // regulate the pace thanks to the modulo
+                      if(times%first->cadence == 0)
+                      {
+                        /* Pour la resistance on divise la puissance de la tour par la résistance du monstre (+ sa résistance est grande moins la tour aura d'impact) */
+                        if(monsterSupp->lifePoint >= first->puissance) 
+                        {
+                          monsterSupp->lifePoint -= first->puissance / monsterSupp->resistance;
+                        }
+                        else
+                          {
+                            monsterSupp->lifePoint = 0;
+                          }
+                      }
+                      break;
+                  
+                    case GREEN: 
+                      if(times%first->cadence == 0)
+                      {
+                        if(monsterSupp->lifePoint >= first->puissance) 
+                        {
+                          monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
+                        }
+                        else 
+                        {
+                          monsterSupp->lifePoint = 0;
+                        }
+                      }
+                      break;
+                  
+                    case YELLOW:
+                      if(times%first->cadence == 0)
+                      {
+                        if(monsterSupp->lifePoint >= first->puissance) 
+                          {
+                            monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
+                          }
+                        else monsterSupp->lifePoint = 0;
+                    }
+                      break;
+                      
+                    case BLUE:
+                      if(times%first->cadence== 0)
+                      {
+                        if(monsterSupp->lifePoint >= first->puissance) 
+                          {
+                            monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
+                          }
+                        else 
+                          {
+                            monsterSupp->lifePoint = 0;
+                          }
+                      }
+                      break;
+
+                    default:
+                      break;
+                  }
+                  actionTower = -1;
+                }
+              }
+
+            // Remove monsters with no longer life points
+            if(monsterSupp->lifePoint <= 0)
+            {
+                printf("mort\n");
+                monsterTmp = monsterSupp;
+                monsterSupp = monsterSupp->next;
+                wave.list[i].m = delMonster(wave.list[i].m, monsterTmp);
+                // Multiplying money by the number of the wave so the more the game advances the more the user earns money
+                /*argent += 50 * vague.nbListes;
+                sprintf(ch_argent, "%d", argent); // Conversion de l'entier
+                sprintf(ChaineFinale, "%s%s", ch_argent, euro); 
+                nbDead ++;
+                */
+
+              }
+              else 
+                {
+                  monsterSupp = (*monsterSupp).next;
+                }
+              /* Le nombre de monstre est égale au nombre de monstre tués */
+
+          }
+        }
+        /*times++;  
+
+        if(nbDead == 60){
+                    jeu->win = 1;
+                  }
 
 
 

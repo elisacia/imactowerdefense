@@ -248,14 +248,14 @@ fprintf(stderr, "%s\n",filename );
 	fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
 	Node* current = createNode(x, y, next);
 	Node* tmp = current;
-	
+	int j=0;
 
-	while(i<nbLines) {
+	while(j<nbLines) {
 		fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
 		Node* node = createNode(x,y, next);
 	 	(*current).next = node;
 		current=(*current).next;
-		i++;
+		j++;
 	}
 
 

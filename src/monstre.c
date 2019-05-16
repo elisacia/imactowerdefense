@@ -4,7 +4,7 @@
 Monster* createMonster(MonsterType type, Node* next, float x, float y){
 	if (next == NULL)
 	{
-		fprintf(stderr, "ERROR\n");
+		fprintf(stderr, "CEST CETTE ERROR\n");
 		exit(1);
 	}
 

@@ -1,4 +1,81 @@
 #include "map.h"
+#include "image.h"
+
+/* ------- LIRE IMAGE ------- */ 
+
+int newImage(Image *image, unsigned int width, unsigned int height)
+{
+  // memory allocation
+  image->data = (unsigned char*) malloc(sizeof(unsigned char) * 3 * width * height);
+  if(image->data == NULL){
+    printf("newImage : error bad memory allocation.\n");
+    return EXIT_FAILURE;
+  }
+
+  // update width and height
+  image->width  = width;
+  image->height = height;
+
+  return EXIT_SUCCESS;
+}
+
+void freeImage(Image *image)
+{
+  if(image != NULL) {
+    if(image->data != NULL)	{
+	    free(image->data);
+      image->data= NULL;
+    }
+
+    image->width  = 0;
+    image->height = 0;
+	}
+}
+
+int loadImagePPM(Image *image, char *filename)
+{
+  FILE *myFile = NULL;
+  char chaine[255];
+  unsigned int width,height;
+
+  // open the file
+  if (!(myFile = fopen(filename, "rt")))
+    {
+      printf("loadImagePPM : error opening file %s.\n",filename);
+      return EXIT_FAILURE;
+    }
+
+  // read header
+  fscanf(myFile,"%s\n",chaine);
+
+  // read comments ...
+  do{ 
+    fgets(chaine,255,myFile);
+  } while (chaine[0]=='#');
+  
+  // read width and height
+  sscanf(chaine,"%d %d",&width,&height);
+  printf("width:  %d\nheight: %d\n",width,height);
+
+  // read the "255"
+  fscanf(myFile,"%s\n",chaine);
+
+  // memory allocation
+  if(newImage(image,width,height) == EXIT_FAILURE){
+    printf("loadImagePPM : memory allocation error\n");
+    return EXIT_FAILURE;
+  }
+
+  // read the data
+  fread(image->data, sizeof (unsigned char), width*height * 3, myFile);
+
+  // close the file
+  fclose(myFile);
+
+  return EXIT_SUCCESS;
+}
+
+
 
 /* ------- CRÉATION CARTE + VERIFICATION ------- */
 
@@ -229,8 +306,8 @@ fprintf(stderr, "%s\n",filename );
 
 	while(i<nbLines) {
 		fscanf(fichierITD, "%*d %*d %d %d %d\n", &x, &y,&next);
-		fprintf(stderr, "%d %d\n",x,y );
-		fprintf(stderr, "%d\n",next );
+		// fprintf(stderr, "%d %d\n",x,y );
+		// fprintf(stderr, "%d\n",next );
 		if (x > carte->w || y > carte->h || x<0 || y<0)
 		{
 			fprintf(stderr, "Erreur ITD: erreur de coordonnées sur le carte %s\n, des coordonnées sont hors de la taille de la carte",file );
@@ -242,19 +319,20 @@ fprintf(stderr, "%s\n",filename );
 	x=0;
 	y=0;
 	
-
+	int j=0;
 	//liste des noeuds 
 	fseek(fichierITD, position, SEEK_SET);
 	fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
 	Node* current = createNode(x, y, next);
 	Node* tmp = current;
-	int j=0;
+	
 
 	while(j<nbLines) {
 		fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
 		Node* node = createNode(x,y, next);
 	 	(*current).next = node;
 		current=(*current).next;
+			 // fprintf(stderr, "bla" );
 		j++;
 	}
 
@@ -262,10 +340,34 @@ fprintf(stderr, "%s\n",filename );
 	 (*current).next = NULL;
 	 (*map).listNode = tmp;
 
+	// Image image;
+	//  newImage(image,600,600);
+
+	//  //get data de l'image
+	//  loadImagePPM(image,filename);
+
+	 
+
+
+
+	//  freeImage(image);
 	 SDL_FreeSurface(carte);
 
 	 return 1;
 }
+
+
+
+
+
+
+
+//verifier si coordonés noeuds itd = point noir sur image
+
+
+
+//verifier si les points de la ligne entre deux noeud = blanc sur image
+
 
 /* ------- CHARGEMENT CARTE ------- */
 

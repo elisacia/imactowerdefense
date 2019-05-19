@@ -9,7 +9,7 @@
 
 #include "map.h"
 #include "graphic.h"
-#include "menu.h"
+#include "bat.h"
 #include "monstre.h"
 #include "tower.h"
 #include "struct.h"
@@ -68,11 +68,11 @@ int main(int argc, char** argv)
   
     int xClick = 0; 
     int yClick = 0;
-    /*
-    int xOver=0, yOver =0, buttonOver = 0;
+    int xOver=0;
+    int yOver =0;
+    int buttonOver = 0;
     int terrain =0;
     int taille =0;
-    */
     int times=1;
     
 
@@ -97,9 +97,17 @@ int main(int argc, char** argv)
 
     /* Initialization of money */
     int money = 3000;
-    char* yen= "YEN";
+    char* yen= " YEN";
+    char str_money[10]; // Chaine de char qui stocke l'entier argent convertit en chaine de char
+    char FinalStringMoney[20];
+    sprintf(str_money, "%d", money); // Conversion de l'entier
+    /* Concatenation de la chaine de caractere argent et de "Euro"*/
+    sprintf(FinalStringMoney, "%s%s", str_money, yen);
+    printf("%s\n",FinalStringMoney );
+   
+
     //Show the budget of the player 
-    printf("%d %s\n",money, yen);
+    //printf("%d %s\n",money, yen);
 
     /* Initializing the SDL */
     if(-1 == SDL_Init(SDL_INIT_VIDEO)) 
@@ -473,16 +481,58 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
               case SDL_BUTTON_LEFT:
                 xClick = e.button.x;
                 yClick = e.button.y;
+                      //On vérifie si on peut construire sur la zone
+                      if(jeu->start && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0 && jeu->rule ==0)
+                      {
+                          terrain = verifPositionTower(first, xClick, yClick, map.colorConstruct.r, map.colorConstruct.g, map.colorConstruct.b);
+                          //Si on se trouve dans la zone jeu et qu'une tour est sélectionnée
+                          if(yClick < 550 && towerType != -1) 
+                          {
+                            // Création des tours
+                            if(first == NULL && terrain)
+                            {
+                                    tete = createTower(xClick, yClick, towerType);
+                                    /* Achat de la tour*/
+                                    money = money - first->cout;
+                                    sprintf(str_money, "%d", money); // Conversion de l'entier
+                                    sprintf(FinalStringMoney, "%s%s", str_money, yen); 
+                            }
+                            else if(terrain && ( ((towerType == RED) && argent>=500) || ((towerType == GREEN) && argent>=300) || 
+                                ((towerType ==YELLOW) && argent>=250) || ((towerType == BLUE) && argent>=400)))
+                            {                 
+                                  tower = first;
+                                  first = createTower(xClick, yClick, towerType);
+                                  first->next = tower;       
+                                  money = money - tete->cout; 
+                                  sprintf(str_money, "%d", money); // Conversion de l'entier
+                                  sprintf(FinalStringMoney, "%s%s", str_money, yen);          
+                            }
+                            else if(money<500 || money<1000)
+                            {
+                                  info = "Vous n'avez plus assez d'argent\npour acheter cette tour... ";
+                                  printf("Vous n'avez plus d'argent\n");
+                            }
+                            else info = "Zone non constructible";     
+                      }
+                      else if(towerType == -1) 
+                      {
+                         if(yClick > 550)  
+                        {
+                            info = "Zone non constructible";
+                        }
+                        info = "Choisissez une tour !";
+                      }
+            }
                 //Lance le jeu, lorsque l'utilisateur clique sur le bouton jouer
                 if(xClick > 225 && xClick < 580 && yClick >440 && yClick < 500)
                 {
                  jeu->start = 1;
                 }
                 //Lance les regles, lorsque l'utilisateur clique sur le bouton aide
-                //if(jeu->start == 0 && xClick > 285 && xClick < 515 && yClick > 520 && yClick < 570)
-                //{
-                //  jeu->regle = 1;
-                //}
+                if(jeu->start == 0 && xClick > 285 && xClick < 515 && yClick > 520 && yClick < 570)
+                {
+                    jeu->rule = 1;
+                }
                 printf("clic en (%d, %d)\n", e.button.x, e.button.y);
               default:   
               break;

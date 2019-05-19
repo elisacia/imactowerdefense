@@ -98,10 +98,10 @@ int main(int argc, char** argv)
     /* Initialization of money */
     int money = 3000;
     char* yen= " YEN";
-    char str_money[10]; // Chaine de char qui stocke l'entier argent convertit en chaine de char
+    char str_money[10]; // Chaine de char qui stocke l'entier money convertit en chaine de char
     char FinalStringMoney[20];
     sprintf(str_money, "%d", money); // Conversion de l'entier
-    /* Concatenation de la chaine de caractere argent et de "Euro"*/
+    /* Concatenation de la chaine de caractere money et de "Euro"*/
     sprintf(FinalStringMoney, "%s%s", str_money, yen);
     printf("%s\n",FinalStringMoney );
    
@@ -338,9 +338,9 @@ int main(int argc, char** argv)
             //     monsterSupp = monsterSupp->next;
             //     wave.list[i].m = delMonster(wave.list[i].m, monsterTmp);
             //     // Multiplying money by the number of the wave so the more the game advances the more the user earns money
-            //     /*argent += 50 * vague.nbListes;
-            //     sprintf(ch_argent, "%d", argent); // Conversion de l'entier
-            //     sprintf(ChaineFinale, "%s%s", ch_argent, euro); 
+            //     /*money += 50 * vague.nbListes;
+            //     sprintf(ch_money, "%d", money); // Conversion de l'entier
+            //     sprintf(ChaineFinale, "%s%s", ch_money, euro); 
             //     nbDead ++;
             //     */
             //   }
@@ -364,7 +364,7 @@ int main(int argc, char** argv)
 //         /* On recupere la taille de la chaine de caractère afin de pouvoir régler l'affichage du texte*/ 
 //         taille = strlen(info);
 //         //printf("%d\n", taille );
-//         if (towerType==-1 && taille<= 20){
+//         if (typeTower==-1 && taille<= 20){
 //           frogBulle(GLUT_BITMAP_HELVETICA_18, info, 540, 540);
 //         }
 //         else if(taille>= 23 && taille < 35 ) frogBulle(GLUT_BITMAP_HELVETICA_18, info, 558, 555);
@@ -372,7 +372,7 @@ int main(int argc, char** argv)
 //         else if (taille>=35) frogBulle(GLUT_BITMAP_HELVETICA_12, info, 528, 555);          
 //       }
 
-//       /* affichage de l'argent restant*/
+//       /* affichage de l'money restant*/
 //       affichageTexte(GLUT_BITMAP_TIMES_ROMAN_24, ChaineFinale, 10,570);
 
 //       //Construction des tours
@@ -484,37 +484,37 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                       //On vérifie si on peut construire sur la zone
                       if(jeu->start && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0 && jeu->rule ==0)
                       {
-                          terrain = verifPositionTower(first, xClick, yClick, map.colorConstruct.r, map.colorConstruct.g, map.colorConstruct.b);
+                          terrain = checkTowerPosition(first, xClick, yClick, map.colorConstruct.r, map.colorConstruct.g, map.colorConstruct.b);
                           //Si on se trouve dans la zone jeu et qu'une tour est sélectionnée
-                          if(yClick < 550 && towerType != -1) 
+                          if(yClick < 550 && typeTower != -1) 
                           {
                             // Création des tours
                             if(first == NULL && terrain)
                             {
-                                    tete = createTower(xClick, yClick, towerType);
+                                   first = createTower(xClick, yClick, typeTower);
                                     /* Achat de la tour*/
                                     money = money - first->cout;
                                     sprintf(str_money, "%d", money); // Conversion de l'entier
                                     sprintf(FinalStringMoney, "%s%s", str_money, yen); 
                             }
-                            else if(terrain && ( ((towerType == RED) && argent>=500) || ((towerType == GREEN) && argent>=300) || 
-                                ((towerType ==YELLOW) && argent>=250) || ((towerType == BLUE) && argent>=400)))
+                            else if(terrain && ( ((typeTower == RED) && money>=500) || ((typeTower == GREEN) && money>=300) || 
+                                ((typeTower ==YELLOW) && money>=250) || ((typeTower == BLUE) && money>=400)))
                             {                 
                                   tower = first;
-                                  first = createTower(xClick, yClick, towerType);
+                                  first = createTower(xClick, yClick, typeTower);
                                   first->next = tower;       
-                                  money = money - tete->cout; 
+                                  money = money - first->cout; 
                                   sprintf(str_money, "%d", money); // Conversion de l'entier
                                   sprintf(FinalStringMoney, "%s%s", str_money, yen);          
                             }
                             else if(money<500 || money<1000)
                             {
-                                  info = "Vous n'avez plus assez d'argent\npour acheter cette tour... ";
-                                  printf("Vous n'avez plus d'argent\n");
+                                  info = "Vous n'avez plus assez d'money\npour acheter cette tour... ";
+                                  printf("Vous n'avez plus d'money\n");
                             }
                             else info = "Zone non constructible";     
                       }
-                      else if(towerType == -1) 
+                      else if(typeTower == -1) 
                       {
                          if(yClick > 550)  
                         {
@@ -568,7 +568,7 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
 
     SDL_FreeSurface(background);
     //Suppression de la texture du background
-    glDeleteTextures(1, &backgroundTex);
+    glDelefirstxtures(1, &backgroundTex);
     //SDL_FreeSurface(screen);
     /* Release of resources associated with the SDL */
     SDL_Quit();

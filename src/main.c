@@ -58,12 +58,11 @@ int main(int argc, char** argv)
     /* Initialization of the game */
     Jeu* jeu;
     jeu = (Jeu*)malloc(sizeof(Jeu));
-    jeu->start =0;
+    jeu->start =1;
     jeu->win=0;
     jeu->lose=0;
     jeu->pause=0;
     jeu->help=0;
-    jeu->rule=0;
     Map map;
   
     int xClick = 0; 
@@ -133,7 +132,7 @@ int main(int argc, char** argv)
     /*Loading rules page */
     //GLuint rulesTex = loadTexture("image/rules.png");
     /*Loading help page */
-    //GLuint helpTex = loadTexture("image/help.png");
+    GLuint helpTex = loadTexture("img/help.png");
     /*Loading pause page */
     //GLuint pauseTex = loadTexture("image/pause.png");
 
@@ -143,7 +142,8 @@ int main(int argc, char** argv)
     map= loadMap("./data/carte1.itd");
     SDL_Surface* background= loadImage(nameMap);
     GLuint backgroundTex;
-    if(background == NULL) {
+    if(background == NULL) 
+    {
       fprintf(stderr, "Impossible de charger l'image. %s\n", nameMap);
       return EXIT_FAILURE;
     }
@@ -181,24 +181,24 @@ int main(int argc, char** argv)
     //Creation of the table of the monster's lists 
     wave.list[wave.nbLists -1]= listM;
     char* totalWave=" / 10 vagues";
-    printf("%d %s\n", wave.nbLists, totalWave);
+    printf("%d %s %d\n", wave.nbLists, totalWave, jeu->help);
 
 
-  
     /* Main loop */
     int loop = 1;
     while(loop) 
     {
         /* Time recovery at the beginning of the loop */
         Uint32 startTime = SDL_GetTicks();
-        
         /* Drawing code */
         glClear(GL_COLOR_BUFFER_BIT);
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
+        //glTranslatef(-600,0,0);
+        //drawPicture(accessTex, 800, 600);
         /* when the player clicks on "play" */
-        if (jeu->start ==0 && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0 && jeu->rule == 0)
+        if (jeu->start ==0 && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0)
         {
           //draw a rectangle with the texture of the cart
           drawPicture(backgroundTex, background->w, background->h);
@@ -208,9 +208,7 @@ int main(int argc, char** argv)
           //draw a rectangle with the texture of the map
           glTranslatef(600,0,0);
           drawPicture(menu, 200, 600);
-
-
-        }
+        
  
         /* Choose the type of monster in function of the number of waves */
         typeMonster = chooseMonster(wave);
@@ -254,6 +252,7 @@ int main(int argc, char** argv)
         {
           first = deleteTower(first, towerSupp);
         }  
+
 
 
         /******** ACTION TOWER / MONSTER *********/
@@ -396,7 +395,25 @@ int main(int argc, char** argv)
 //       }
   
   
-// }
+    }
+
+    
+        /* Affichage regles */
+        else if(jeu->help){
+             drawPicture(helpTex, 800, 600);
+
+    printf("%d %s %d\n", wave.nbLists, totalWave, jeu->help);
+
+         }   
+
+    
+
+         /* Page d'accueil  */
+        else{
+          //glTranslatef(-600,0,0);
+          drawPicture(accessTex, 800, 600);
+
+        }
 
 /* Affichage de l'aide de la page d'accueil*/
 // else if(jeu->aide){
@@ -414,15 +431,15 @@ int main(int argc, char** argv)
 // else if(jeu->perdu){
 //     drawPicture(perduTex, background->w, background->h);
 // }
-/* Affichage regles */
-// else if(jeu->regle){
-//     drawPicture(regleTex, background->w, background->h);
-// }   
- /* Page d'accueil */   
-else{
-  glTranslatef(-600,0,0);
-  drawPicture(accessTex, 800, 600);
-}
+// /* Affichage regles */
+// else if(jeu->help){
+//      drawPicture(helpTex, 800, 600);
+//  }   
+//   Page d'accueil  
+// else if(jeu->help=0 && jeu->start=1){
+//   //glTranslatef(-600,0,0);
+//   drawPicture(accessTex, 800, 600);
+// }
 
 /* pour le play de accueil :  x>225 et x<580 et y>440 et y<500
 pour le regle de accueil : x>225 et x<580 et y>520 et y<570
@@ -445,34 +462,56 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
         SDL_Event e;
         while(SDL_PollEvent(&e)) 
         {
-            /* The user closes the window : */
-            if(e.type == SDL_QUIT) 
-            {
-                loop = 0;
-                break;
-            }
-
-            /* The user closes the window : */
-                if(e.type == SDL_QUIT) 
+               if(e.type == SDL_QUIT) 
                 {
                   loop = 0;
                   break;
                 }
+
+            /* The user closes the window : */
+                // if(e.type == SDL_QUIT) 
+                // {
+                //   loop = 0;
+                //   break;
+                // }
     
-                if( e.type == SDL_KEYDOWN 
-                  && (e.key.keysym.sym == SDLK_q || e.key.keysym.sym == SDLK_ESCAPE))
-                {
-                  loop = 0; 
-                  break;
-                }
+                // if( e.type == SDL_KEYDOWN 
+                //   && (e.key.keysym.sym == SDLK_q || e.key.keysym.sym == SDLK_ESCAPE))
+                // {
+                //   loop = 0; 
+                //   break;
+                // }
+
             
         /* Some examples of treatment of events : */
         switch(e.type) 
         {
-          /* Window resizing */
+            /* Window resizing */
           case SDL_VIDEORESIZE:
             reshape(&surface, e.resize.w, e.resize.h);
             break; 
+
+          /* Keyboard key */
+          case SDL_KEYDOWN:
+            switch(e.key.keysym.sym)
+            {
+                case 'a':
+                    jeu->help=1;
+                    break;
+                case 's':
+                    jeu->start=0;
+                    break;
+                case 'q':
+                    loop=0;
+                    break;
+                case 'r':
+                    jeu->start=1;
+                    jeu->help=0;
+                    break;
+            //printf("touche pressee (code = %d)\n", e.key.keysym.sym);
+                default:
+                    break;
+            }       
 
           /* Mouse click */
           case SDL_MOUSEBUTTONUP:
@@ -482,7 +521,7 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                 xClick = e.button.x;
                 yClick = e.button.y;
                       //On vérifie si on peut construire sur la zone
-                      if(jeu->start && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0 && jeu->rule ==0)
+                      if(jeu->start && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0 )
                       {
                           terrain = checkTowerPosition(first, xClick, yClick, map.colorConstruct.r, map.colorConstruct.g, map.colorConstruct.b);
                           //Si on se trouve dans la zone jeu et qu'une tour est sélectionnée
@@ -513,7 +552,7 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                                   printf("Vous n'avez plus d'money\n");
                             }
                             else info = "Zone non constructible";     
-                      }
+                        }
                       else if(typeTower == -1) 
                       {
                          if(yClick > 550)  
@@ -526,24 +565,22 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                 //Lance le jeu, lorsque l'utilisateur clique sur le bouton jouer
                 if(xClick > 225 && xClick < 580 && yClick >440 && yClick < 500)
                 {
-                 jeu->start = 1;
+                 jeu->start = 0;
+                 jeu->help=0;
+
                 }
                 //Lance les regles, lorsque l'utilisateur clique sur le bouton aide
-                if(jeu->start == 0 && xClick > 285 && xClick < 515 && yClick > 520 && yClick < 570)
+                if(jeu->start == 1 && xClick > 285 && xClick < 515 && yClick > 520 && yClick < 570)
                 {
-                    jeu->rule = 1;
+                    jeu->help = 1;
+                    printf("la boucle de fin\n");
                 }
                 printf("clic en (%d, %d)\n", e.button.x, e.button.y);
-              default:   
+               
               break;
             }
-                  
-          /* Keyboard key */
-          case SDL_KEYDOWN:
-              printf("touche pressee (code = %d)\n", e.key.keysym.sym);
-              break;
-                      
-            default:
+
+           
               break;
         }
       }

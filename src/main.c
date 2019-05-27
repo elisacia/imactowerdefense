@@ -125,16 +125,13 @@ int main(int argc, char** argv)
 
     /* Loading access page */
     GLuint accessTex = loadTexture("img/accueil.png");
-    /*Loading page winner */
-    //GLuint winnerTex = loadTexture("image/winner.png");
-    /*Loading page loser */
-    //GLuint loserTex = loadTexture("image/loser.png");
-    /*Loading rules page */
-    //GLuint rulesTex = loadTexture("image/rules.png");
     /*Loading help page */
     GLuint helpTex = loadTexture("img/help.png");
-    /*Loading pause page */
-    //GLuint pauseTex = loadTexture("image/pause.png");
+    /*Loading informationstion's tower page */
+    GLuint towerRedTex = loadTexture("img/tower_red_info.png");
+    GLuint towerBluTex = loadTexture("img/tower_blue_info.png");
+    GLuint towerGreTex = loadTexture("img/tower_green_info.png");
+    GLuint towerYelTex = loadTexture("img/tower_yellow_info.png");
 
 
     /* Loading the ITD map */
@@ -195,60 +192,71 @@ int main(int argc, char** argv)
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        //glTranslatef(-600,0,0);
-        //drawPicture(accessTex, 800, 600);
+
         /* when the player clicks on "play" */
         if (jeu->start ==0 && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0)
         {
           //draw a rectangle with the texture of the cart
           drawPicture(backgroundTex, background->w, background->h);
-          //Draw the path with .itd's colors and the coordinates of nodes
-          //glColor3ub(map.colorPath.r, map.colorPath.g, map.colorPath.b);
-          //drawPath(node);
           //draw a rectangle with the texture of the map
           glTranslatef(600,0,0);
           drawPicture(menu, 200, 600);
         
- 
-        /* Choose the type of monster in function of the number of waves */
-        typeMonster = chooseMonster(wave);
-        /* Creation of a new monster with default parameters from the beginning */
-        Monster* newM = createMonster(typeMonster, node->next, nodeX, nodeY);
 
-        /* About monster list lists */
-        if( times%600 == 0  && wave.nbLists < 10 ) 
-        {
-          listMonster listMonst;
-          monster = newM;
-          listM.m = monster;
-          listM = listMonst;
-          listM.nbMonster = 1;
-          wave.nbLists+=1;
-          wave.list[wave.nbLists - 1]= listM;
-          printf("%d %s\n", wave.nbLists, totalWave);
-        }
+            /* Choose the type of monster in function of the number of waves */
+            typeMonster = chooseMonster(wave);
+            /* Creation of a new monster with default parameters from the beginning */
+            Monster* newM = createMonster(typeMonster, node->next, nodeX, nodeY);
 
-        /* To pause in order to space monsters*/
-        else if(times%60 == 0 && listM.nbMonster<6)
-        {
-          monster = newMonster(monster, newM); //add a monster
-          wave.list[wave.nbLists - 1].m = monster;
-          listM.nbMonster +=1;
-        }
+            //printf("%d %d %d %s %d\n",monster->lifePoint,monster->resistance,monster->speed,monster->imageMonster,monster->profit);           
 
-        /* Draw the wave of monsters */    
-        createList(wave, jeu);
 
-        /* Display the wave number */
-        char stringWave[255];
-        char str_wave[10];
-        sprintf(str_wave, "%d", wave.nbLists); // Convert the integer
-        sprintf(stringWave, "%s%s", str_wave, totalWave);
-        displayText(GLUT_BITMAP_9_BY_15, stringWave, 300,30);
-        
+            /* About monster list lists */
+            if( times%600 == 0  && wave.nbLists < 10 ) 
+            {
+              listMonster listMonst;
+              monster = newM;
+              listM.m = monster;
+              listM = listMonst;
+              listM.nbMonster = 1;
+              wave.nbLists+=1;
+              wave.list[wave.nbLists - 1]= listM;
+              printf("%d %s\n", wave.nbLists, totalWave);
+            }
+
+            /* To pause in order to space monsters*/
+            else if(times%60 == 0 && listM.nbMonster<6)
+            {
+              monster = newMonster(monster, newM); //add a monster
+              wave.list[wave.nbLists - 1].m = monster;
+              listM.nbMonster +=1;
+            }
+
+            /* Draw the wave of monsters */  
+            glPushMatrix();
+            glTranslatef(-600,483,0);
+            createList(wave, jeu);
+            glPopMatrix();
+
+            /* Display the wave number */
+            char stringWave[255];
+            char str_wave[10];
+            sprintf(str_wave, "%d", wave.nbLists); // Convert the integer
+            sprintf(stringWave, "%s%s", str_wave, totalWave);
+            displayText(GLUT_BITMAP_9_BY_15, stringWave, 300,30);
+            
+            /* Display the money of the player */
+            glPushMatrix();
+            glTranslatef(-570,550,0);
+            glColor3f(0.0f, 0.0f, 0.0f); 
+            drawSquare(90,30);
+            glPopMatrix();
+
+            displayText(GLUT_BITMAP_9_BY_15, FinalStringMoney, 40, 560);
+            
 
         /* Delete a tower */
-        if(towerSupp != NULL)
+        /*if(towerSupp != NULL)
         {
           first = deleteTower(first, towerSupp);
         }  
@@ -257,99 +265,99 @@ int main(int argc, char** argv)
 
         /******** ACTION TOWER / MONSTER *********/
         /* Display the list of monsters in the table */
-        // for(int i = 0; i < wave.nbLists; i++) 
-        // {  
-        //   while(monsterSupp != NULL) 
-        //   {             
-        //       // If the tower detects a monster => return the type of the tower
-        //       actionTower = detectMonster(first, (*monsterSupp).x, (*monsterSupp).y);
-        //       if(actionTower!=-1){ 
-        //         if(monsterSupp->lifePoint > 0)
-        //         {
-        //           switch(actionTower)
-        //           {           
-        //             case RED:
-        //               // regulate the pace thanks to the modulo
-        //               if(times%first->cadence == 0)
-        //               {
-        //                 /* Pour la resistance on divise la puissance de la tour par la résistance du monstre (+ sa résistance est grande moins la tour aura d'impact) */
-        //                 if(monsterSupp->lifePoint >= first->puissance) 
-        //                 {
-        //                   monsterSupp->lifePoint -= first->puissance / monsterSupp->resistance;
-        //                 }
-        //                 else
-        //                   {
-        //                     monsterSupp->lifePoint = 0;
-        //                   }
-        //               }
-        //               break;
+ /*          for(int i = 0; i < wave.nbLists; i++) 
+           {  
+             while(monsterSupp != NULL) 
+             {             
+                 // If the tower detects a monster => return the type of the tower
+                 actionTower = detectMonster(first, (*monsterSupp).x, (*monsterSupp).y);
+                 if(actionTower!=-1){ 
+                   if(monsterSupp->lifePoint > 0)
+                   {
+                     switch(actionTower)
+                     {           
+                       case RED:
+                         // regulate the pace thanks to the modulo
+                         if(times%first->cadence == 0)
+                         {
+                           /* Pour la resistance on divise la puissance de la tour par la résistance du monstre (+ sa résistance est grande moins la tour aura d'impact) */
+/*                           if(monsterSupp->lifePoint >= first->puissance) 
+                           {
+                             monsterSupp->lifePoint -= first->puissance / monsterSupp->resistance;
+                           }
+                           else
+                             {
+                               monsterSupp->lifePoint = 0;
+                             }
+                         }
+                         break;
                   
-        //             case GREEN: 
-        //               if(times%first->cadence == 0)
-        //               {
-        //                 if(monsterSupp->lifePoint >= first->puissance) 
-        //                 {
-        //                   monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
-        //                 }
-        //                 else 
-        //                 {
-        //                   monsterSupp->lifePoint = 0;
-        //                 }
-        //               }
-        //               break;
+                        case GREEN: 
+                         if(times%first->cadence == 0)
+                         {
+                           if(monsterSupp->lifePoint >= first->puissance) 
+                           {
+                             monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
+                           }
+                           else 
+                           {
+                             monsterSupp->lifePoint = 0;
+                           }
+                         }
+                         break;
                   
-        //             case YELLOW:
-        //               if(times%first->cadence == 0)
-        //               {
-        //                 if(monsterSupp->lifePoint >= first->puissance) 
-        //                   {
-        //                     monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
-        //                   }
-        //                 else monsterSupp->lifePoint = 0;
-        //             }
-        //               break;
+                       case YELLOW:
+                         if(times%first->cadence == 0)
+                         {
+                           if(monsterSupp->lifePoint >= first->puissance) 
+                             {
+                               monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
+                             }
+                           else monsterSupp->lifePoint = 0;
+                       }
+                         break;
                       
-        //             case BLUE:
-        //               if(times%first->cadence== 0)
-        //               {
-        //                 if(monsterSupp->lifePoint >= first->puissance) 
-        //                   {
-        //                     monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
-        //                   }
-        //                 else 
-        //                   {
-        //                     monsterSupp->lifePoint = 0;
-        //                   }
-        //               }
-        //               break;
+                       case BLUE:
+                         if(times%first->cadence== 0)
+                         {
+                           if(monsterSupp->lifePoint >= first->puissance) 
+                             {
+                               monsterSupp->lifePoint  -= (first->puissance) / (monsterSupp->resistance);
+                             }
+                           else 
+                             {
+                               monsterSupp->lifePoint = 0;
+                             }
+                         }
+                         break;
 
-        //             default:
-        //               break;
-        //           }
-        //           actionTower = -1;
-        //         }
-        //       }
-            // Remove monsters with no longer life points
-            // if(monsterSupp->lifePoint <= 0)
-            // {
-            //     printf("mort\n");
-            //     monsterTmp = monsterSupp;
-            //     monsterSupp = monsterSupp->next;
-            //     wave.list[i].m = delMonster(wave.list[i].m, monsterTmp);
-            //     // Multiplying money by the number of the wave so the more the game advances the more the user earns money
-            //     /*money += 50 * vague.nbListes;
-            //     sprintf(ch_money, "%d", money); // Conversion de l'entier
-            //     sprintf(ChaineFinale, "%s%s", ch_money, euro); 
-            //     nbDead ++;
-            //     */
-            //   }
-            //   else 
-            //     {
-            //       monsterSupp = (*monsterSupp).next;
-            //     }
+                       default:
+                         break;
+                     }
+                     actionTower = -1;
+                   }
+                 }
+               //Remove monsters with no longer life points
+                  if(monsterSupp->lifePoint <= 0)
+                 {
+                      printf("mort\n");
+                      monsterTmp = monsterSupp;
+                      monsterSupp = monsterSupp->next;
+                      wave.list[i].m = delMonster(wave.list[i].m, monsterTmp);
+                      // Multiplying money by the number of the wave so the more the game advances the more the user earns money
+                      /*money += 50 * vague.nbListes;
+                      sprintf(ch_money, "%d", money); // Conversion de l'entier
+                      sprintf(ChaineFinale, "%s%s", ch_money, euro); 
+                      nbDead ++;
+                      */
+/*                    }
+                   else 
+                   {
+                        monsterSupp = (*monsterSupp).next;
+                   }
               /* Le nombre de monstre est égale au nombre de monstre tués */
-        //   }
-        // }
+//             }
+//           }
         /*times++;  
 
         if(nbDead == 60){
@@ -371,41 +379,62 @@ int main(int argc, char** argv)
 //         else if (taille>=35) frogBulle(GLUT_BITMAP_HELVETICA_12, info, 528, 555);          
 //       }
 
-//       /* affichage de l'money restant*/
-//       affichageTexte(GLUT_BITMAP_TIMES_ROMAN_24, ChaineFinale, 10,570);
+         /* affichage de l'money restant*/
+         displayText(GLUT_BITMAP_9_BY_15, FinalStringMoney, 40, 560);
 
-//       //Construction des tours
-//       if(first !=NULL) constructTower(first);
-//       if (tourOver != NULL) drawBulle(tourOver);
-//         //Affiche description de la tour laser
-//       if(buttonOver == 1){ 
-//           drawDescription(description_laser, 5);
-//       }
-//       //Affiche description de la tour mitraillettes
-//       if(buttonOver == 2){
-//           drawDescription(description_mitraillettes, 175);
-//       }
-//       //Affiche description de la tour rocket
-//       if(buttonOver == 3){
-//         drawDescription(description_rocket, 350);
-//       }
-//       //Affiche description de la tour hybrides
-//       if(buttonOver == 4){
-//           drawDescription(description_hybrides, 520);
-//       }
+              //Construction des tours
+              /*if(first !=NULL) 
+              {
+                constructTower(first);
+              }
+              // if (tourOver != NULL) drawBulle(tourOver);
+              //    Affiche description de la tour laser
+              // if(buttonOver == 1){ 
+              //     drawDescription(description_laser, 5);
+              // }
+              // //Affiche description de la tour mitraillettes
+              // if(buttonOver == 2){
+              //     drawDescription(description_mitraillettes, 175);
+              // }
+              // //Affiche description de la tour rocket
+              // if(buttonOver == 3){
+              //   drawDescription(description_rocket, 350);
+              // }
+              // //Affiche description de la tour hybrides
+              // if(buttonOver == 4){
+              //     drawDescription(description_hybrides, 520);
+              // }
   
-  
+                    /* Display the informations about the towers */
+            if(jeu->red)
+            {
+                glTranslatef(-205,395,0);
+                drawPicture(towerRedTex, 200, 200);
+            }
+            else if(jeu->blue)
+            {
+                glTranslatef(-205,395,0);
+                drawPicture(towerBluTex, 200, 200);
+            }
+            else if(jeu->green)
+            {
+                glTranslatef(-205,395,0);
+                drawPicture(towerGreTex, 200, 200);
+            }
+            else if(jeu->yellow)
+            {
+                glTranslatef(-205,395,0);
+                drawPicture(towerYelTex, 200, 200);
+            }
     }
+
+
 
     
         /* Affichage regles */
         else if(jeu->help){
              drawPicture(helpTex, 800, 600);
-
-    printf("%d %s %d\n", wave.nbLists, totalWave, jeu->help);
-
-         }   
-
+         }  
     
 
          /* Page d'accueil  */
@@ -414,36 +443,6 @@ int main(int argc, char** argv)
           drawPicture(accessTex, 800, 600);
 
         }
-
-/* Affichage de l'aide de la page d'accueil*/
-// else if(jeu->aide){
-//    drawPicture(aideTex, background->w, background->h);
-// }
-/* Si l'utilisateur gagne */
-  // else if(jeu->gagne){
-  //   drawPicture(gagneTex, background->w, background->h);
-  // }
-/* menu pause */
-// else if(jeu->pause){
-//   drawPicture(pauseTex, background->w, background->h);
-// }
-/* Si l'utilisateur perd */
-// else if(jeu->perdu){
-//     drawPicture(perduTex, background->w, background->h);
-// }
-// /* Affichage regles */
-// else if(jeu->help){
-//      drawPicture(helpTex, 800, 600);
-//  }   
-//   Page d'accueil  
-// else if(jeu->help=0 && jeu->start=1){
-//   //glTranslatef(-600,0,0);
-//   drawPicture(accessTex, 800, 600);
-// }
-
-/* pour le play de accueil :  x>225 et x<580 et y>440 et y<500
-pour le regle de accueil : x>225 et x<580 et y>520 et y<570
-*/ 
 
 
 
@@ -468,21 +467,7 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                   break;
                 }
 
-            /* The user closes the window : */
-                // if(e.type == SDL_QUIT) 
-                // {
-                //   loop = 0;
-                //   break;
-                // }
-    
-                // if( e.type == SDL_KEYDOWN 
-                //   && (e.key.keysym.sym == SDLK_q || e.key.keysym.sym == SDLK_ESCAPE))
-                // {
-                //   loop = 0; 
-                //   break;
-                // }
-
-            
+          
         /* Some examples of treatment of events : */
         switch(e.type) 
         {
@@ -505,10 +490,9 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                     loop=0;
                     break;
                 case 'r':
-                    jeu->start=1;
+                    jeu->start=0;
                     jeu->help=0;
                     break;
-            //printf("touche pressee (code = %d)\n", e.key.keysym.sym);
                 default:
                     break;
             }       
@@ -521,15 +505,19 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                 xClick = e.button.x;
                 yClick = e.button.y;
                       //On vérifie si on peut construire sur la zone
-                      if(jeu->start && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0 )
+                      if(jeu->start==0 && jeu->pause == 0 && jeu->win == 0 && jeu->lose == 0 )
                       {
+                          printf("on rentre dans boucle1\n");
+
                           terrain = checkTowerPosition(first, xClick, yClick, map.colorConstruct.r, map.colorConstruct.g, map.colorConstruct.b);
                           //Si on se trouve dans la zone jeu et qu'une tour est sélectionnée
-                          if(yClick < 550 && typeTower != -1) 
+                          if(xClick < 600 && yClick<600 && typeTower != -1) 
                           {
+                            printf("on rentre dans boucle2\n");
                             // Création des tours
-                            if(first == NULL && terrain)
+                            if(first == NULL && terrain==1)
                             {
+                                 printf("on rentre dans boucle3\n");
                                    first = createTower(xClick, yClick, typeTower);
                                     /* Achat de la tour*/
                                     money = money - first->cout;
@@ -548,8 +536,8 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                             }
                             else if(money<500 || money<1000)
                             {
-                                  info = "Vous n'avez plus assez d'money\npour acheter cette tour... ";
-                                  printf("Vous n'avez plus d'money\n");
+                                  info = "Vous n'avez plus assez d'argent\npour acheter cette tour... ";
+                                  printf("Vous n'avez plus d'argent\n");
                             }
                             else info = "Zone non constructible";     
                         }
@@ -573,15 +561,55 @@ pour le regle de accueil : x>225 et x<580 et y>520 et y<570
                 if(jeu->start == 1 && xClick > 285 && xClick < 515 && yClick > 520 && yClick < 570)
                 {
                     jeu->help = 1;
-                    printf("la boucle de fin\n");
                 }
                 printf("clic en (%d, %d)\n", e.button.x, e.button.y);
                
               break;
             }
 
-           
+            case SDL_MOUSEMOTION :
+            xOver = e.motion.x;
+            yOver = e.motion.y;
+
+                      if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 80 && yOver < 130)
+                      {      
+                        jeu->red=1;  
+                      }
+                      else
+                      {
+                        jeu->red=0;
+                      }
+                      
+                      if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 195 && yOver < 250)
+                      {      
+                        jeu->blue=1;  
+                      }
+                      else
+                      {
+                        jeu->blue=0;
+                      }
+                    
+                      if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 250 && yOver < 305)
+                      {      
+                        jeu->green=1;  
+                      }
+                      else
+                      {
+                        jeu->green=0;
+                      }
+
+                      if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 135 && yOver < 190)
+                      {      
+                        jeu->yellow=1;  
+                      }
+                      else
+                      {
+                        jeu->yellow=0;
+                      }
+
               break;
+           
+            break;
         }
       }
         

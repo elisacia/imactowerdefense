@@ -139,8 +139,8 @@ int checkTowerPosition(Tower* tower, int x, int y, int R, int G, int B){
 		}
 	}
 
-	int positionY = 600-y;
-	glReadPixels(x,positionY,1,1,GL_RGB, GL_UNSIGNED_BYTE,color);
+	//int positionY = 600-y;
+	glReadPixels(x,y,1,1,GL_RGB, GL_UNSIGNED_BYTE,color);
 	if (color[0] != R && color[1] != G && color[2] != B) {}
 	{
 		fprintf(stderr, "Impossible de placer la tour hors du terrain\n");
@@ -173,16 +173,16 @@ void drawTowerInformations(Tower* currentTower){
 	GLuint towerInfo;
 	switch(currentTower->type){
 			case RED:
-				towerInfo = loadTexture("images/tower_red_info.png");
+				towerInfo = loadTexture("img/tower_red_info.png");
 				break;
 			case GREEN:
-				towerInfo = loadTexture("images/tower_green_info.png");
+				towerInfo = loadTexture("img/tower_green_info.png");
 				break;
 			case YELLOW:
-				towerInfo = loadTexture("images/tower_yellow_info.png");
+				towerInfo = loadTexture("img/tower_yellow_info.png");
 				break;
 			case BLUE:
-				towerInfo = loadTexture("images/tower_blue_info.png");
+				towerInfo = loadTexture("img/tower_blue_info.png");
 				break;
 			default:
 				break;

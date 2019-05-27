@@ -4,7 +4,7 @@
 Monster* createMonster(MonsterType type, Node* next, float x, float y){
 	if (next == NULL)
 	{
-		fprintf(stderr, "CEST CETTE ERROR\n");
+		fprintf(stderr, "ERROR\n");
 		exit(1);
 	}
 
@@ -85,6 +85,59 @@ MonsterType chooseMonster(Wave wave){
 	return type;
 }
 
+
+/* DRAW MONSTER */
+int drawMonster(Monster* monster, Jeu* jeu){
+	SDL_Surface* Monster= loadImage(monster->imageMonster);
+	GLuint monsterTex= loadTexture(monster->imageMonster);
+	drawPicture(monsterTex, 30,30);
+	if(monster->node_next != NULL)
+	{
+		if(monster->node_next->y == monster->y)
+		{
+			if(monster->node_next->x > monster->x)
+			{
+				monster->x +=1 * monster->speed;
+					drawPicture(monsterTex, 30,30);
+			}
+			else{
+				monster->x -=1 * monster->speed;
+					drawPicture(monsterTex, 30,30);
+			}
+		}
+		
+		else{
+			if(monster->node_next->y > monster->y)
+			{
+				monster->y +=1 * monster->speed;
+					drawPicture(monsterTex, 30,30);
+			}
+			else{
+				monster->y -=1 * monster->speed;
+					drawPicture(monsterTex, 30,30);
+			}
+		}
+		if(monster->node_next->x == monster->x && monster->node_next->y == monster->y)
+		{
+			monster->node_next=monster->node_next->next;
+				drawPicture(monsterTex, 30,30);
+		}
+	
+	if(monster->node_next == NULL)
+	{
+		printf("PERDU :(\n");
+		jeu->lose=1;
+	}
+
+
+
+
+return 1;
+
+}
+else return 0;
+}
+
 /* CREATE A NEW LIST */
 int createList(Wave wave, Jeu* jeu) {
 	Monster* m;
@@ -104,53 +157,6 @@ int createList(Wave wave, Jeu* jeu) {
 return 1;
 
 }
-
-/* DRAW MONSTER */
-int drawMonster(Monster* monster, Jeu* jeu){
-	SDL_Surface* Monster= loadImage(monster->imageMonster);
-	GLuint monsterTex= loadTexture(monster->imageMonster);
-	if(monster->node_next != NULL)
-	{
-		if(monster->node_next->y == monster->y)
-		{
-			if(monster->node_next->x > monster->x)
-			{
-				monster->x +=1 * monster->speed;
-			}
-			else{
-				monster->x -=1 * monster->speed;
-			}
-		}
-		
-		else{
-			if(monster->node_next->y > monster->y)
-			{
-				monster->y +=1 * monster->speed;
-			}
-			else{
-				monster->y -=1 * monster->speed;
-			}
-		}
-		if(monster->node_next->x == monster->x && monster->node_next->y == monster->y)
-		{
-			monster->node_next=monster->node_next->next;
-		}
-	
-	if(monster->node_next == NULL)
-	{
-		printf("PERDU :(\n");
-		jeu->lose=1;
-	}
-
-
-
-
-return 1;
-
-}
-else return 0;
-}
-
 
 Monster* newMonster(Monster* listMonster, Monster* newMonster) {
 	if (listMonster == NULL)

@@ -67,21 +67,20 @@ TowerType selectTower( xClick,  yClick){
 	}
 
 	//Green tower selection
-	if (xClick > 610 && xClick < 780 && yClick > 250 && yClick < 305)
+	else if (xClick > 610 && xClick < 780 && yClick > 250 && yClick < 305)
 	{
 		T=GREEN;
 	}
 
-	//Yellow tower selection
-	if (xClick > 610 && xClick < 780 && yClick > 135 && yClick < 190)
-	{
-		T=YELLOW;
-	}
-
 	//Blue tower selection
-	if (xClick > 610 && xClick < 780 && yClick > 195 && yClick < 250)
+	else if (xClick > 610 && xClick < 780 && yClick > 195 && yClick < 250)
 	{
 		T=BLUE;
+	}
+		//Yellow tower selection
+	else if (xClick > 610 && xClick < 780 && yClick > 135 && yClick < 190)
+	{
+		T=YELLOW;
 	}
 	else T=-1;
 	return T;
@@ -95,16 +94,16 @@ void constructTower(Tower* tower){
 	while(current !=NULL) {
 		switch(current->type){
 			case RED:
-				towerTexture = loadTexture("images/tower_red.png");
+				towerTexture = loadTexture("img/tower_red.png");
 				break;
 			case GREEN:
-				towerTexture = loadTexture("images/tower_green.png");
+				towerTexture = loadTexture("img/tower_green.png");
 				break;
 			case YELLOW:
-				towerTexture = loadTexture("images/tower_yellow.png");
+				towerTexture = loadTexture("img/tower_yellow.png");
 				break;
 			case BLUE:
-				towerTexture = loadTexture("images/tower_blue.png");
+				towerTexture = loadTexture("img/tower_blue.png");
 				break;
 			default:
 				break;
@@ -126,7 +125,7 @@ void constructTower(Tower* tower){
 //vérifie si déja une tour placée
 int checkTowerPosition(Tower* tower, int x, int y, int R, int G, int B){
 	Tower* currentTower = tower;
-	char color[3];
+	unsigned char color[3];
 
 	while(currentTower != NULL){
 		if (x>=(currentTower->x - 60) && x<=(currentTower->x+60) && y>= (currentTower->y-60) && y<=(currentTower->y+60))
@@ -141,7 +140,9 @@ int checkTowerPosition(Tower* tower, int x, int y, int R, int G, int B){
 
 	//int positionY = 600-y;
 	glReadPixels(x,y,1,1,GL_RGB, GL_UNSIGNED_BYTE,color);
-	if (color[0] != R && color[1] != G && color[2] != B) {}
+	fprintf(stderr, "%d %d %d\n", R, G,B);
+	fprintf(stderr, "%d %d %d\n",color[0], color[1],color[2]);
+	if (color[0] != R && color[1] != G && color[2] != B) 
 	{
 		fprintf(stderr, "Impossible de placer la tour hors du terrain\n");
 		return 0;

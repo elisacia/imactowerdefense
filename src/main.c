@@ -30,80 +30,80 @@ static float aspectRatio;
 
 void reshape(SDL_Surface** surface, unsigned int width, unsigned int height)
 { 
-    SDL_Surface* surface_temp = SDL_SetVideoMode(   
-        width, height, BIT_PER_PIXEL,
-        SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_RESIZABLE);
-    if(NULL == surface_temp) 
-    {
-        fprintf(
-            stderr, 
-            "Erreur lors du redimensionnement de la fenetre.\n");
-        exit(EXIT_FAILURE);
-    }
-    *surface = surface_temp;
+  SDL_Surface* surface_temp = SDL_SetVideoMode(   
+    width, height, BIT_PER_PIXEL,
+    SDL_OPENGL | SDL_GL_DOUBLEBUFFER | SDL_RESIZABLE);
+  if(NULL == surface_temp) 
+  {
+    fprintf(
+      stderr, 
+      "Erreur lors du redimensionnement de la fenetre.\n");
+    exit(EXIT_FAILURE);
+  }
+  *surface = surface_temp;
 
-    aspectRatio = width / (float) height;
+  aspectRatio = width / (float) height;
 
-    glViewport(0, 0, (*surface)->w, (*surface)->h);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-        gluOrtho2D(
-        0,WIDTH,
-        0,HEIGHT);
+  glViewport(0, 0, (*surface)->w, (*surface)->h);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluOrtho2D(
+    0,WIDTH,
+    0,HEIGHT);
 }
 
 
 int main(int argc, char** argv) 
 {
     /* Initialization of the game */
-    Jeu* jeu;
-    jeu = (Jeu*)malloc(sizeof(Jeu));
-    jeu->start =1;
-    jeu->win=0;
-    jeu->lose=0;
-    jeu->pause=0;
-    jeu->help=0;
-    Map map;
+  Jeu* jeu;
+  jeu = (Jeu*)malloc(sizeof(Jeu));
+  jeu->start =1;
+  jeu->win=0;
+  jeu->lose=0;
+  jeu->pause=0;
+  jeu->help=0;
+  Map map;
   
-    int xClick = 0; 
-    int yClick = 0;
-    int xOver=0;
-    int yOver =0;
-    int buttonOver = 0;
-    int terrain =0;
-    int taille =0;
-    int times=1;
-    
+  int xClick = 0; 
+  int yClick = 0;
+  int xOver=0;
+  int yOver =0;
+  int buttonOver = 0;
+  int terrain =0;
+  int taille =0;
+  int times=1;
+
 
     /* Creation of monsters */
-    MonsterType typeMonster = CAT_1;
-    Monster* monsterSupp = NULL;
-    Monster* monsterTmp = NULL;
-    monsterSupp=(Monster*)malloc(sizeof(Monster));
-    monsterTmp=(Monster*)malloc(sizeof(Monster));
-    int nbDead=0; 
+  MonsterType typeMonster = CAT_1;
+  Monster* monsterSupp = NULL;
+  Monster* monsterTmp = NULL;
+  monsterSupp=(Monster*)malloc(sizeof(Monster));
+  monsterTmp=(Monster*)malloc(sizeof(Monster));
+  int nbDead=0; 
 
     /* Creation of towers */
-    TowerType typeTower = RED;
-    Tower* tower= NULL;
-    Tower* first= NULL;
-    Tower* towerOver= NULL;
-    Tower* towerSupp= NULL;
-    TowerType actionTower = RED;
-    towerOver=(Tower*)malloc(sizeof(Tower));
-    
-    char* info=NULL;
+  TowerType typeTower = -1;
+  Tower* tower= NULL;
+  Tower* first= NULL;
+  Tower* towerOver= NULL;
+  Tower* towerSupp= NULL;
+  TowerType actionTower = -1;
+  towerOver=(Tower*)malloc(sizeof(Tower));
+
+  char* info=NULL;
 
     /* Initialization of money */
-    int money = 3000;
-    char* yen= " YEN";
+  int money = 3000;
+  char* yen= " YEN";
     char str_money[10]; // Chaine de char qui stocke l'entier money convertit en chaine de char
     char FinalStringMoney[20];
     sprintf(str_money, "%d", money); // Conversion de l'entier
     /* Concatenation de la chaine de caractere money et de "Euro"*/
     sprintf(FinalStringMoney, "%s%s", str_money, yen);
     printf("%s\n",FinalStringMoney );
-   
+
 
     //Show the budget of the player 
     //printf("%d %s\n",money, yen);
@@ -111,10 +111,10 @@ int main(int argc, char** argv)
     /* Initializing the SDL */
     if(-1 == SDL_Init(SDL_INIT_VIDEO)) 
     {
-        fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
-        return EXIT_FAILURE;
+      fprintf(stderr, "Impossible d'initialiser la SDL. Fin du programme.\n");
+      return EXIT_FAILURE;
     }
-  
+
     /* Opening a window and creating an OpenGL context */
     SDL_Surface* surface;
     reshape(&surface, WIDTH, HEIGHT);
@@ -171,7 +171,7 @@ int main(int argc, char** argv)
     listMonster listM;
     listM.m= monster;
     listM.nbMonster= 1;
-   
+
     /* Creation of the wave of monsters */
     Wave wave;
     wave.nbLists=1;
@@ -186,47 +186,48 @@ int main(int argc, char** argv)
     while(loop) 
     {
         /* Time recovery at the beginning of the loop */
-        Uint32 startTime = SDL_GetTicks();
+      Uint32 startTime = SDL_GetTicks();
         /* Drawing code */
-        glClear(GL_COLOR_BUFFER_BIT);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+      glClear(GL_COLOR_BUFFER_BIT);
+      glMatrixMode(GL_MODELVIEW);
+      glLoadIdentity();
 
 
         /* when the player clicks on "play" */
-        if (jeu->start ==0 && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0)
-        {
+      if (jeu->start ==0 && jeu->pause == 0 && jeu->help == 0 && jeu->win == 0 && jeu->lose == 0)
+      {
+
           //draw a rectangle with the texture of the cart
-          drawPicture(backgroundTex, background->w, background->h);
+        drawPicture(backgroundTex, background->w, background->h);
           //draw a rectangle with the texture of the map
-          glTranslatef(600,0,0);
-          drawPicture(menu, 200, 600);
+        glTranslatef(600,0,0);
+        drawPicture(menu, 200, 600);
         
 
             /* Choose the type of monster in function of the number of waves */
-            typeMonster = chooseMonster(wave);
+        typeMonster = chooseMonster(wave);
             /* Creation of a new monster with default parameters from the beginning */
-            Monster* newM = createMonster(typeMonster, node->next, nodeX, nodeY);
+        Monster* newM = createMonster(typeMonster, node->next, nodeX, nodeY);
 
             //printf("%d %d %d %s %d\n",monster->lifePoint,monster->resistance,monster->speed,monster->imageMonster,monster->profit);           
 
 
             /* About monster list lists */
-            if( times%600 == 0  && wave.nbLists < 10 ) 
-            {
-              listMonster listMonst;
-              monster = newM;
-              listM.m = monster;
-              listM = listMonst;
-              listM.nbMonster = 1;
-              wave.nbLists+=1;
-              wave.list[wave.nbLists - 1]= listM;
-              printf("%d %s\n", wave.nbLists, totalWave);
-            }
+        if( times%600 == 0  && wave.nbLists < 10 ) 
+        {
+          listMonster listMonst;
+          monster = newM;
+          listM.m = monster;
+          listM = listMonst;
+          listM.nbMonster = 1;
+          wave.nbLists+=1;
+          wave.list[wave.nbLists - 1]= listM;
+          printf("%d %s\n", wave.nbLists, totalWave);
+        }
 
             /* To pause in order to space monsters*/
-            else if(times%60 == 0 && listM.nbMonster<6)
-            {
+        else if(times%60 == 0 && listM.nbMonster<6)
+        {
               monster = newMonster(monster, newM); //add a monster
               wave.list[wave.nbLists - 1].m = monster;
               listM.nbMonster +=1;
@@ -253,6 +254,7 @@ int main(int argc, char** argv)
             glPopMatrix();
 
             displayText(GLUT_BITMAP_9_BY_15, FinalStringMoney, 40, 560);
+
             
 
         /* Delete a tower */
@@ -380,71 +382,55 @@ int main(int argc, char** argv)
 //       }
 
          /* affichage de l'money restant*/
-         displayText(GLUT_BITMAP_9_BY_15, FinalStringMoney, 40, 560);
+                  displayText(GLUT_BITMAP_9_BY_15, FinalStringMoney, 40, 560);
 
               //Construction des tours
-              /*if(first !=NULL) 
-              {
-                constructTower(first);
-              }
-              // if (tourOver != NULL) drawBulle(tourOver);
-              //    Affiche description de la tour laser
-              // if(buttonOver == 1){ 
-              //     drawDescription(description_laser, 5);
-              // }
-              // //Affiche description de la tour mitraillettes
-              // if(buttonOver == 2){
-              //     drawDescription(description_mitraillettes, 175);
-              // }
-              // //Affiche description de la tour rocket
-              // if(buttonOver == 3){
-              //   drawDescription(description_rocket, 350);
-              // }
-              // //Affiche description de la tour hybrides
-              // if(buttonOver == 4){
-              //     drawDescription(description_hybrides, 520);
-              // }
-  
+                  if(first !=NULL) 
+                  {
+                    glPushMatrix();
+                    glTranslatef(-625,-25,0);
+                    constructTower(first);
+                    glPopMatrix();
+                  }
+
                     /* Display the informations about the towers */
-            if(jeu->red)
-            {
-                glTranslatef(-205,395,0);
-                drawPicture(towerRedTex, 200, 200);
-            }
-            else if(jeu->blue)
-            {
-                glTranslatef(-205,395,0);
-                drawPicture(towerBluTex, 200, 200);
-            }
-            else if(jeu->green)
-            {
-                glTranslatef(-205,395,0);
-                drawPicture(towerGreTex, 200, 200);
-            }
-            else if(jeu->yellow)
-            {
-                glTranslatef(-205,395,0);
-                drawPicture(towerYelTex, 200, 200);
-            }
-    }
+                  if(jeu->red)
+                  {
+                    glTranslatef(-205,395,0);
+                    drawPicture(towerRedTex, 200, 200);
+                  }
+                  else if(jeu->blue)
+                  {
+                    glTranslatef(-205,395,0);
+                    drawPicture(towerBluTex, 200, 200);
+                  }
+                  else if(jeu->green)
+                  {
+                    glTranslatef(-205,395,0);
+                    drawPicture(towerGreTex, 200, 200);
+                  }
+                  else if(jeu->yellow)
+                  {
+                    glTranslatef(-205,395,0);
+                    drawPicture(towerYelTex, 200, 200);
+                  }
+                }
 
 
 
-    
+
         /* Affichage regles */
-        else if(jeu->help){
-             drawPicture(helpTex, 800, 600);
-         }  
-    
+                else if(jeu->help){
+                 drawPicture(helpTex, 800, 600);
+               }  
+
 
          /* Page d'accueil  */
-        else{
+               else{
           //glTranslatef(-600,0,0);
-          drawPicture(accessTex, 800, 600);
+                drawPicture(accessTex, 800, 600);
 
-        }
-
-
+              }
 
 
 
@@ -453,190 +439,216 @@ int main(int argc, char** argv)
 
 
 
-        
+
+
+
         /* Exchange of the front and the back buffer: update of the window */
-        SDL_GL_SwapBuffers();
-        
-        /* Loop dealing with events */
-        SDL_Event e;
-        while(SDL_PollEvent(&e)) 
-        {
-               if(e.type == SDL_QUIT) 
-                {
-                  loop = 0;
-                  break;
-                }
+              SDL_GL_SwapBuffers();
 
-          
+        /* Loop dealing with events */
+              SDL_Event e;
+              while(SDL_PollEvent(&e)) 
+              {
+               if(e.type == SDL_QUIT) 
+               {
+                loop = 0;
+                break;
+              }
+
+
         /* Some examples of treatment of events : */
-        switch(e.type) 
-        {
+              switch(e.type) 
+              {
             /* Window resizing */
-          case SDL_VIDEORESIZE:
-            reshape(&surface, e.resize.w, e.resize.h);
-            break; 
+                case SDL_VIDEORESIZE:
+                reshape(&surface, e.resize.w, e.resize.h);
+                break; 
 
           /* Keyboard key */
-          case SDL_KEYDOWN:
-            switch(e.key.keysym.sym)
-            {
-                case 'a':
-                    jeu->help=1;
-                    break;
-                case 's':
-                    jeu->start=0;
-                    break;
-                case 'q':
-                    loop=0;
-                    break;
-                case 'r':
-                    jeu->start=0;
-                    jeu->help=0;
-                    break;
-                default:
-                    break;
-            }       
+                case SDL_KEYDOWN:
+                switch(e.key.keysym.sym)
+                {
+                  case 'a':
+                  jeu->help=1;
+                  break;
+                  case 's':
+                  jeu->start=0;
+                  break;
+                  case 'q':
+                  loop=0;
+                  break;
+                  case 'r':
+                  jeu->start=0;
+                  jeu->help=0;
+                  break;
+                  default:
+                  break;
+                }       
 
           /* Mouse click */
-          case SDL_MOUSEBUTTONUP:
-            info=NULL;
-            switch(e.button.button) {
-              case SDL_BUTTON_LEFT:
-                xClick = e.button.x;
-                yClick = e.button.y;
-                      //On vérifie si on peut construire sur la zone
-                      if(jeu->start==0 && jeu->pause == 0 && jeu->win == 0 && jeu->lose == 0 )
-                      {
-                          printf("on rentre dans boucle1\n");
+                case SDL_MOUSEBUTTONUP:
+                info=NULL;
+                switch(e.button.button) {
+                  case SDL_BUTTON_LEFT:
+                  xClick = e.button.x;
+                  yClick = e.button.y;
 
-                          terrain = checkTowerPosition(first, xClick, yClick, map.colorConstruct.r, map.colorConstruct.g, map.colorConstruct.b);
-                          //Si on se trouve dans la zone jeu et qu'une tour est sélectionnée
-                          if(xClick < 600 && yClick<600 && typeTower != -1) 
-                          {
-                            printf("on rentre dans boucle2\n");
-                            // Création des tours
-                            if(first == NULL && terrain==1)
-                            {
-                                 printf("on rentre dans boucle3\n");
-                                   first = createTower(xClick, yClick, typeTower);
-                                    /* Achat de la tour*/
-                                    money = money - first->cout;
+                  if(xClick>600)
+                  {
+                    typeTower=selectTower(xClick,yClick);
+                  }  
+
+                      //On vérifie si on peut construire sur la zone
+                  if(jeu->start==0 && jeu->pause == 0 && jeu->win == 0 && jeu->lose == 0 )
+                  {
+                    terrain = checkTowerPosition(first, xClick, yClick, map.colorConstruct.r, map.colorConstruct.g, map.colorConstruct.b);
+
+                    //Si on se trouve dans la zone jeu et qu'une tour est sélectionnée
+                    if(xClick < 600 && typeTower != -1) 
+                    {
+                      // Création des tours
+                      if(first == NULL && terrain==1)
+                      {
+                       first = createTower(xClick, yClick, typeTower);
+                       /* Achat de la tour*/
+                       money = money - first->cout;
                                     sprintf(str_money, "%d", money); // Conversion de l'entier
                                     sprintf(FinalStringMoney, "%s%s", str_money, yen); 
-                            }
-                            else if(terrain && ( ((typeTower == RED) && money>=500) || ((typeTower == GREEN) && money>=300) || 
-                                ((typeTower ==YELLOW) && money>=250) || ((typeTower == BLUE) && money>=400)))
-                            {                 
-                                  tower = first;
-                                  first = createTower(xClick, yClick, typeTower);
-                                  first->next = tower;       
-                                  money = money - first->cout; 
+                                  }
+                                  else if(terrain && ( ((typeTower == RED) && money>=500) || ((typeTower == GREEN) && money>=300) || 
+                                    ((typeTower ==YELLOW) && money>=250) || ((typeTower == BLUE) && money>=400)))
+                                  {                 
+                                    tower = first;
+                                    first = createTower(xClick, yClick, typeTower);
+                                    first->next = tower;       
+                                    money = money - first->cout; 
                                   sprintf(str_money, "%d", money); // Conversion de l'entier
                                   sprintf(FinalStringMoney, "%s%s", str_money, yen);          
-                            }
-                            else if(money<500 || money<1000)
-                            {
-                                  info = "Vous n'avez plus assez d'argent\npour acheter cette tour... ";
-                                  printf("Vous n'avez plus d'argent\n");
-                            }
-                            else info = "Zone non constructible";     
-                        }
-                      else if(typeTower == -1) 
-                      {
-                         if(yClick > 550)  
-                        {
-                            info = "Zone non constructible";
-                        }
-                        info = "Choisissez une tour !";
-                      }
-            }
+                                }
+                            //     else if(money<500)
+                            //     {
+                            //       /* Display the no more money info */
+                            //       char StringNoMoney[255]="Vous n'avez plus assez d'argent\npour acheter cette tour, désolé.";
+                            //       glPushMatrix();
+                            //       glTranslatef(-200,300,0);
+                            //       glColor3f(0.0f, 0.0f, 0.0f); 
+                            //       drawSquare(90,90);
+                            //       glPopMatrix();
+
+                            //       displayText(GLUT_BITMAP_9_BY_15, StringNoMoney, 300, 300);
+                            //       printf("Vous n'avez plus d'argent\n");
+                            //     }
+                            //     else info = "Zone non constructible";     
+                            //   }
+                            //   else if(typeTower == -1) 
+                            //   {
+                            //    if(yClick > 550)  
+                            //    {
+                            //     info = "Zone non constructible";
+                            //   }
+                            //   info = "Choisissez une tour !";
+                             }
+                          }
                 //Lance le jeu, lorsque l'utilisateur clique sur le bouton jouer
-                if(xClick > 225 && xClick < 580 && yClick >440 && yClick < 500)
-                {
-                 jeu->start = 0;
-                 jeu->help=0;
+                          if(xClick > 225 && xClick < 580 && yClick >440 && yClick < 500)
+                          {
+                           jeu->start = 0;
+                           jeu->help=0;
 
-                }
+                         }
                 //Lance les regles, lorsque l'utilisateur clique sur le bouton aide
-                if(jeu->start == 1 && xClick > 285 && xClick < 515 && yClick > 520 && yClick < 570)
-                {
-                    jeu->help = 1;
-                }
-                printf("clic en (%d, %d)\n", e.button.x, e.button.y);
-               
+                         if(jeu->start == 1 && xClick > 285 && xClick < 515 && yClick > 520 && yClick < 570)
+                         {
+                          jeu->help = 1;
+                        }
+                        printf("clic en (%d, %d)\n", e.button.x, e.button.y);
+
+                        break;
+
+                        case SDL_BUTTON_RIGHT:
+                /* Selection de la tour à supprimer */
+                        towerSupp = overTour(first, xOver, yOver);
+                        if(towerSupp != NULL){
+                  // Argent gagné grace a la suppression de la tour*/
+                          money += towerSupp->cout;
+                  sprintf(str_money, "%d", money); // Conversion de l'entier
+                  sprintf(FinalStringMoney, "%s%s", str_money, yen);
+                }   
+                default:   
+                break;
+
+              }
+
+              case SDL_MOUSEMOTION :
+              xOver = e.motion.x;
+              yOver = e.motion.y;
+
+              if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 80 && yOver < 130)
+              {      
+                jeu->red=1;  
+              }
+              else
+              {
+                jeu->red=0;
+              }
+
+              if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 195 && yOver < 250)
+              {      
+                jeu->blue=1;  
+              }
+              else
+              {
+                jeu->blue=0;
+              }
+
+              if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 250 && yOver < 305)
+              {      
+                jeu->green=1;  
+              }
+              else
+              {
+                jeu->green=0;
+              }
+
+              if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 135 && yOver < 190)
+              {      
+                jeu->yellow=1;  
+              }
+              else
+              {
+                jeu->yellow=0;
+              }
+
+              break;
+
               break;
             }
+          }
 
-            case SDL_MOUSEMOTION :
-            xOver = e.motion.x;
-            yOver = e.motion.y;
-
-                      if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 80 && yOver < 130)
-                      {      
-                        jeu->red=1;  
-                      }
-                      else
-                      {
-                        jeu->red=0;
-                      }
-                      
-                      if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 195 && yOver < 250)
-                      {      
-                        jeu->blue=1;  
-                      }
-                      else
-                      {
-                        jeu->blue=0;
-                      }
-                    
-                      if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 250 && yOver < 305)
-                      {      
-                        jeu->green=1;  
-                      }
-                      else
-                      {
-                        jeu->green=0;
-                      }
-
-                      if(jeu->start==0 && xOver > 610 && xOver < 780 && yOver > 135 && yOver < 190)
-                      {      
-                        jeu->yellow=1;  
-                      }
-                      else
-                      {
-                        jeu->yellow=0;
-                      }
-
-              break;
-           
-            break;
-        }
-      }
-        
 
       /* Calculation of elapsed time */
-      Uint32 elapsedTime = SDL_GetTicks() - startTime;
+          Uint32 elapsedTime = SDL_GetTicks() - startTime;
       /* If too little time has passed, we pause the program */
-      if(elapsedTime < FRAMERATE_MILLISECONDS) 
-      {
-        SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
+          if(elapsedTime < FRAMERATE_MILLISECONDS) 
+          {
+            SDL_Delay(FRAMERATE_MILLISECONDS - elapsedTime);
+          }
+        }
+
+        free(node);
+        free(towerOver);
+        free(tower);
+        if (jeu->win == 0)
+        {
+          free(monster);
+        } 
+
+        SDL_FreeSurface(background);
+    // Removing the background texture
+        glDeleteTextures(1, &backgroundTex);
+        SDL_FreeSurface(surface);
+    // Release of resources associated with the SDL 
+        SDL_Quit();
+
+        return EXIT_SUCCESS;
       }
-    }
-
-    //free(node);
-    //free(tourOver);
-    //free(tower);
-    /*if (jeu->win == 0)
-    {
-      free(monster);
-    } 
-
-    SDL_FreeSurface(background);
-    //Suppression de la texture du background
-    glDelefirstxtures(1, &backgroundTex);
-    //SDL_FreeSurface(screen);
-    /* Release of resources associated with the SDL */
-    SDL_Quit();
-    
-    return EXIT_SUCCESS;
-}

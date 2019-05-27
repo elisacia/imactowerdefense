@@ -3,7 +3,7 @@
 
 /// \brief structure that contains an image
 typedef struct Image{
-  unsigned char *data;
+  unsigned char *pixelData;
   unsigned int width;
   unsigned int height;
   long taille;
@@ -21,11 +21,6 @@ int newImage(Image *image, unsigned int width, unsigned int height);
 /// \param image: pointer on the image.
 void freeImage(Image *image);
 
-/// \brief save an image with PPM (P6) file format.
-/// \param image: pointer on the image to save.
-/// \param filename: char array containing the filename of the image to be saved.
-/// \return EXIT_FAILURE in case of problem, else EXIT_SUCCESS.
-int saveImagePPM(Image *image, char *filename);
 
 /// \brief load an image with PPM (P6) file format.
 /// \param image: pointer on the image to load.

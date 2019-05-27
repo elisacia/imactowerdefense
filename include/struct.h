@@ -51,10 +51,7 @@ typedef struct jeu {
 	int lose;
 	int pause;
 	int help;
-	int red;
-	int green;
-	int blue;
-	int yellow;
+	int rule;
 }Jeu;
 
 /* ------- FONCTIONS ------- */

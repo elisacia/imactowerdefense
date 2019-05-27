@@ -3,78 +3,100 @@
 
 /* ------- LIRE IMAGE ------- */ 
 
-int newImage(Image *image, unsigned int width, unsigned int height)
+
+Image* readPPM(FILE* fp, int *width, int *height)
 {
-  // memory allocation
-  image->data = (unsigned char*) malloc(sizeof(unsigned char) * 3 * width * height);
-  if(image->data == NULL){
-    printf("newImage : error bad memory allocation.\n");
-    return EXIT_FAILURE;
-  }
+	char chaine;
+	int max;
 
-  // update width and height
-  image->width  = width;
-  image->height = height;
+	if (fscanf(fp, "P%c\n",&chaine)!=1 || chaine!='3' )
+	{
+		printf("ERREUR readPPM : wrong ppm format\n");
+		exit(1);
+	}
 
-  return EXIT_SUCCESS;
+	chaine = getc(fp);
+
+	ungetc(chaine,fp);
+
+	if(fscanf(fp, "%d %d %d",width,height,&max) != 3){
+		printf("ERREUR readPPM : no width/height/sizemax\n");
+		exit(1);
+	}
+
+	if(max!=255)
+	{
+		printf("ERREUR readPPM : no colors\n");
+		exit(1);
+	}
+
+
+	Image *image = malloc(sizeof(Image));
+	image->pixelData = malloc(3**height**width*sizeof(unsigned char));
+
+	if(image->pixelData == NULL){
+		printf("ERREUR readPPM  : error bad memory allocation.\n");
+		return EXIT_FAILURE;
+	}
+
+	unsigned char* data = (unsigned char*) image->pixelData;
+
+
+
+	for (int i = 0; i < *width**height*3; ++i)
+	{
+		if (fscanf(fp, "%u", data+i)!=1)
+		{
+			printf("ERREUR readPPM : invalid rgb component\n");
+			exit(1);
+		}
+	}
+
+
+	return image;
+	
+}
+
+Image* readImage(char *filename)
+{
+	int width;
+	int height;
+	FILE *fp = fopen(filename,"rb");
+
+	if (!fp)
+	{
+		printf("cannot open file : readImage\n");
+		exit(1);
+	}
+
+	Image* image = readPPM(fp, &width, &height);
+
+	if (!image)
+	{
+		printf("not enough memory for image\n");
+		exit(1);
+	}
+
+	image->width=width;
+	image->height=height;
+
+	fread(image->pixelData, sizeof(unsigned char), width*height * 3, fp);
+
+
+
+
+	fclose(fp);
+	return image;
 }
 
 void freeImage(Image *image)
 {
-  if(image != NULL) {
-    if(image->data != NULL)	{
-	    free(image->data);
-      image->data= NULL;
-    }
-
-    image->width  = 0;
-    image->height = 0;
+	if(image != NULL) {
+		image->width  = 0;
+		image->height = 0;
+		free(image);
 	}
 }
-
-int loadImagePPM(Image *image, char *filename)
-{
-  FILE *myFile = NULL;
-  char chaine[255];
-  unsigned int width,height;
-
-  // open the file
-  if (!(myFile = fopen(filename, "rt")))
-    {
-      printf("loadImagePPM : error opening file %s.\n",filename);
-      return EXIT_FAILURE;
-    }
-
-  // read header
-  fscanf(myFile,"%s\n",chaine);
-
-  // read comments ...
-  do{ 
-    fgets(chaine,255,myFile);
-  } while (chaine[0]=='#');
-  
-  // read width and height
-  sscanf(chaine,"%d %d",&width,&height);
-  printf("width:  %d\nheight: %d\n",width,height);
-
-  // read the "255"
-  fscanf(myFile,"%s\n",chaine);
-
-  // memory allocation
-  if(newImage(image,width,height) == EXIT_FAILURE){
-    printf("loadImagePPM : memory allocation error\n");
-    return EXIT_FAILURE;
-  }
-
-  // read the data
-  fread(image->data, sizeof (unsigned char), width*height * 3, myFile);
-
-  // close the file
-  fclose(myFile);
-
-  return EXIT_SUCCESS;
-}
-
 
 
 /* ------- CRÉATION CARTE + VERIFICATION ------- */
@@ -113,8 +135,8 @@ int createMap(FILE* fichierITD, Map* map){
 		return 0;
 	}
 
-		char commentaire[100];
-		fgets(commentaire,100,fichierITD);
+	char commentaire[100];
+	fgets(commentaire,100,fichierITD);
 
 	//vérification de mots clés: initialisation
 	char keyword[4];
@@ -149,7 +171,9 @@ int createMap(FILE* fichierITD, Map* map){
 		(*map).map = filename;
 	}
 
-fprintf(stderr, "%s\n",filename );
+	fprintf(stderr, "%s\n",filename );
+	
+
 	//vérification mot clé : "chemin"
 	fgets(keyword, 7, fichierITD);
 	if (strcmp(keyword,"chemin")== 0)
@@ -300,13 +324,13 @@ fprintf(stderr, "%s\n",filename );
 		return 0;
 	}
 
-	//vérification si les coordonnés sont bien dans la carte
+	//vérification si les coordonnées sont bien dans la carte
 	int i=0;
 
 
 	while(i<nbLines) {
 		fscanf(fichierITD, "%*d %*d %d %d %d\n", &x, &y,&next);
-		// fprintf(stderr, "%d %d\n",x,y );
+		fprintf(stderr, "%d %d\n",x,y );
 		// fprintf(stderr, "%d\n",next );
 		if (x > carte->w || y > carte->h || x<0 || y<0)
 		{
@@ -319,54 +343,83 @@ fprintf(stderr, "%s\n",filename );
 	x=0;
 	y=0;
 	
-	int j=0;
-	//liste des noeuds 
+
+	Image *image =  readImage("./img/carte1.ppm");
+
+	int j=1;
+	
+	// verifie noeud entrée
 	fseek(fichierITD, position, SEEK_SET);
 	fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
 	Node* current = createNode(x, y, next);
+
+	if (image->pixelData[(600*((int)current->y ) + (int)current->x )*3]==map->colorIn.r &&
+		image->pixelData[(600*((int)current->y ) + (int)current->x )*3+ 1]==map->colorIn.g &&
+		image->pixelData[(600*((int)current->y ) + (int)current->x )*3 + 2]==map->colorIn.b)
+	{
+		printf("Le point d'entrée correspond à la carte\n");
+	}
+	else printf("Le point d'entrée ne correspond pas à la carte\n");
+
 	Node* tmp = current;
 	
+	
+	// verifie tous les noeuds 
 
 	while(j<nbLines) {
+
+		//verifie noeud de sortie
+
+		if (j==nbLines-1)
+		{
+			fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
+			Node* node = createNode(x,y, next);
+			if (image->pixelData[(600*((int)node->y ) + (int)node->x )*3]==map->colorOut.r  &&
+				image->pixelData[(600*((int)node->y ) + (int)node->x )*3+ 1]==map->colorOut.g &&
+				image->pixelData[(600*((int)node->y ) + (int)node->x )*3 + 2]==map->colorOut.b)
+			{
+				printf("Le point de sortie correspond à la carte\n" );
+			}
+
+			else {
+				printf("Le point de sortie ne correspond pas à la carte\n");
+			}
+
+			(*current).next = node;
+			current=(*current).next;
+			j++;		
+			break;
+
+		}
+
 		fscanf(fichierITD,  "%*d %*d %d %d %d\n", &x, &y,&next);
 		Node* node = createNode(x,y, next);
-	 	(*current).next = node;
+		if (image->pixelData[(600*((int)node->y ) + (int)node->x )*3]== map->colorNode.r &&
+			image->pixelData[(600*((int)node->y ) + (int)node->x )*3+ 1]== map->colorNode.g &&
+			image->pixelData[(600*((int)node->y ) + (int)node->x )*3 + 2]== map->colorNode.b)
+		{
+			fprintf(stderr, "Noeud %d correspond à la carte\n",j );	
+		}
+
+		else {
+			printf("Le noeud %d ne correspond pas la carte\n",j);
+		}
+
+		(*current).next = node;
 		current=(*current).next;
-			 // fprintf(stderr, "bla" );
-		j++;
+		j++;		
 	}
 
+	(*current).next = NULL;
+	(*map).listNode = tmp;
 
-	 (*current).next = NULL;
-	 (*map).listNode = tmp;
-
-	// Image image;
-	//  newImage(image,600,600);
-
-	//  //get data de l'image
-	//  loadImagePPM(image,filename);
-
-	 
-
-
+	//verifier si les points de la ligne entre deux noeud = blanc sur image
 
 	//  freeImage(image);
-	 SDL_FreeSurface(carte);
+	SDL_FreeSurface(carte);
 
-	 return 1;
+	return 1;
 }
-
-
-
-
-
-
-
-//verifier si coordonés noeuds itd = point noir sur image
-
-
-
-//verifier si les points de la ligne entre deux noeud = blanc sur image
 
 
 /* ------- CHARGEMENT CARTE ------- */
@@ -381,7 +434,7 @@ Map loadMap(char* nameITD) {
 	}
 
 	Map map;
-		
+
 	if (createMap(fichierITD, &map))
 	{
 		return map;

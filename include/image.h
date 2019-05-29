@@ -21,7 +21,6 @@ int newImage(Image *image, unsigned int width, unsigned int height);
 /// \param image: pointer on the image.
 void freeImage(Image *image);
 
-
 /// \brief load an image with PPM (P6) file format.
 /// \param image: pointer on the image to load.
 /// \param filename: char array containing the filename of the image to load.

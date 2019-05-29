@@ -343,6 +343,7 @@ int createMap(FILE* fichierITD, Map* map){
 	x=0;
 	y=0;
 	
+	fprintf(stderr, "okkk\n");
 
 	Image *image =  readImage("./img/carte1.ppm");
 

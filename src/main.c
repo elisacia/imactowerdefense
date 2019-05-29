@@ -13,6 +13,7 @@
 #include "monstre.h"
 #include "tower.h"
 #include "struct.h"
+#include "image.h"
 
 /* Dimensions of the window */
 static const unsigned int WIDTH = 800;
